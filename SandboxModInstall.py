@@ -128,8 +128,8 @@ def show_interface():
         wx.StaticLine(window, 2, pos=(0, y_pos+20), size=(1, 250), style=wx.HORIZONTAL)
         for option in patcher_json[category].keys():
             y_pos+=20
-            name = ';'.join([join(category, file) for file in patcher_json[category][option]])
-            wx.CheckBox(window, label=option, pos=(10, y_pos), name=name)
+            name = ';'.join([join(category, file) for file in patcher_json[category][option]['paths']])
+            wx.CheckBox(window, label=option, pos=(10, y_pos), name=name).SetToolTip(wx.ToolTip(patcher_json[category][option]['desc']))
         y_pos+=30
     window.SetSize(wx.Size(WINDOW_X-20, WINDOW_Y-130))
     scroll_unit = 10
