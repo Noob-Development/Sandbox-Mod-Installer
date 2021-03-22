@@ -56,6 +56,8 @@ def get_zip_from_github():
         zip_ref.extractall('download')
     log_output('Moving folders')
     download_name = list(os.listdir('download'))[0]
+    if os.path.isdir(MOD_FOLDER):
+        rmtree(join(dir_path, MOD_FOLDER))
     os.rename(join(dir_path, 'download', download_name), MOD_FOLDER)
     rmtree(join(dir_path, 'download'))
     os.remove(ZIP_NAME)
