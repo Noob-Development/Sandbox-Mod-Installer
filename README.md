@@ -3,9 +3,12 @@
 A Python 3 program to automatically update, configure, patch, and install the Sandbox Mod for the game Wargame: Red Dragon. It uses WxPython for the interface.
 
 ## Usage
+**[DOWNLOAD INSTALLER](https://github.com/TheWRDNoob/Sandbox-Mod-Installer/releases/latest/download/SandboxModInstall.exe "DOWNLOAD INSTALLER")**
+
 Place the executable file from the latest release in your Wargame Red Dragon folder and double-click it to begin.  
 
 **Default Game Locations:**
+
 Steam: `C:\Program Files\Steam\steamapps\common\Wargame Red Dragon`
 Epic Games: `C:\Program Files\Epic Games\WargameRedDragon`
 
