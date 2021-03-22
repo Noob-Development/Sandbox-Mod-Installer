@@ -10,6 +10,7 @@ Place the executable file from the latest release in your Wargame Red Dragon fol
 **Default Game Locations:**
 
 Steam: `C:\Program Files\Steam\steamapps\common\Wargame Red Dragon`
+
 Epic Games: `C:\Program Files\Epic Games\WargameRedDragon`
 
 #### Using with other mods:
