@@ -16,8 +16,10 @@ import urllib.request
 import zipfile
 import wx
 
+INSTALLER_VERSION = '1.0.2'
 RELEASE_URL = 'https://api.github.com/repos/TheWRDNoob/Sandbox-Mod-Files/releases/latest'
 MOD_FOLDER = 'SandboxMod'
+PATCHES_LOG = 'patch_list.txt'
 PATCHER_JSON = 'patcher_paths.json'
 INSTALL_JSON = 'install_locations.json'
 PRESANDBOX_SUFFIX = '_pre-sandbox'
@@ -47,7 +49,7 @@ def get_zip_from_github():
     """
     Downloads zip from latest release, extracts to temporary download folder, renames it, moves it, deletes temps
     """
-    log_output('Downloading from GitHub')
+    log_output('Downloading from GitHub, do not close...')
     dir_path = dirname(os.path.realpath(__file__))
     download_url = json.loads(requests.get(RELEASE_URL, allow_redirects=True).content)['zipball_url']
     urllib.request.urlretrieve(download_url, ZIP_NAME)
@@ -143,6 +145,11 @@ def show_interface():
 
 # === MAIN ===
 if __name__ == '__main__':
+    log_output('Welcome to the Sandbox Mod Installer')
+    log_output('Please wait until this console says "Finished!"')
+    log_output('======================================================\n\n\n')
+
+    #Get game variant
     dir_path = dirname(os.path.realpath(__file__))
     base_folder = os.path.basename(os.path.normpath(dir_path))
     if base_folder == 'Wargame Red Dragon':
@@ -150,31 +157,55 @@ if __name__ == '__main__':
     elif base_folder == 'WargameRedDragon':
         game_variant = 'Epic'
     else:
-        log_output('Please place this in your Wargame Red Dragon directory')
+        log_output('Please place this in your Wargame Red Dragon folder')
         exit()
     log_output(f'Game variant: {game_variant}')
 
     #Get most current version
     if not os.path.isdir(join(dir_path, MOD_FOLDER)):
-        log_output('Mod folder does not exist')
+        log_output('Mod not downloaded yet')
         get_zip_from_github()
     else:
         if get_online_version() != get_current_version():
-            log_output('Local mod outdated')
-            log_output(f'{get_online_version()=}, {get_current_version()=}')
+            log_output('Local mod outdated, getting new version')
+            log_output(f'Online version: {get_online_version()}, Local version: {get_current_version()}')
             get_zip_from_github()
         else:
             log_output('Local mod is most updated version')
 
+    #Load installation paths
     log_output('Getting install config')
     install_config = load_configuration()
 
+    #Check to see if installing from patch log
+    hide_interface = False
+    if os.path.isfile(PATCHES_LOG):
+        log_output('Patch log detected, installing from log instead of showing interface')
+        hide_interface = True
+        with open(PATCHES_LOG, 'r') as patches_log:
+            patches_to_apply = patches_log.read().splitlines()
+
     #Show interface
-    log_output('Showing interface')
-    show_interface()
-    if install_canceled:
-        log_output('Install canceled')
+    if not hide_interface:
+        log_output('Showing interface')
+        show_interface()
+        if install_canceled:
+            log_output('Install canceled')
+            exit()
+
+    #Logging patches applied
+    if patches_to_apply == []:
+        log_output('No patches applied')
+        input("Press enter to continue...")
         exit()
+    if mod_from_backup:
+        patches_log = open(join(MOD_FOLDER, PATCHES_LOG), 'w+')
+    else:
+        patches_log = open(join(MOD_FOLDER, PATCHES_LOG), 'a+')
+    for patch in patches_to_apply:
+        patches_log.write(patch)
+        patches_log.write('\n')
+    patches_log.close()
 
     #Make original NDF_Win.dat file if needed
     log_output(f'{mod_from_backup=}')
@@ -190,11 +221,7 @@ if __name__ == '__main__':
             copyfile(full_ndf_path + PRESANDBOX_SUFFIX, full_ndf_path)
 
     #Call patcher
-    if patches_to_apply == []:
-        log_output('No patches applied')
-        input("Press enter to continue...")
-        exit()
-    log_output('Patching')
+    log_output('Patching, this might take a while...\n')
     patcher_call_list = []
     for patch_path in patches_to_apply:
         patcher_call_list += [f'{MOD_FOLDER}\\Script Library\\{patch_path}']
@@ -230,5 +257,5 @@ if __name__ == '__main__':
 
 
 
-    log_output('Done!')
+    log_output('\nFinished!')
     input("Press enter to exit...")
