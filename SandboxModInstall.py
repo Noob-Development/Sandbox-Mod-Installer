@@ -16,7 +16,7 @@ import urllib.request
 import zipfile
 import wx
 
-INSTALLER_VERSION = '1.0.2'
+INSTALLER_VERSION = '1.0.3'
 RELEASE_URL = 'https://api.github.com/repos/TheWRDNoob/Sandbox-Mod-Files/releases/latest'
 MOD_FOLDER = 'SandboxMod'
 PATCHES_LOG = 'patch_list.txt'
@@ -40,8 +40,18 @@ def log_output(text):
     Prints to console and to log file
     """
     print(text)
-    output_file.write(str(text))
-    output_file.write('\n')
+    output_file.write(str(text)+'\n')
+
+def write_config(config_file, new_file):
+    contents = config_file.read()
+    splits = contents.split('%')
+    for i in range(len(splits)):
+        if i % 2:
+            try:
+                splits[i] = config_replacements[splits[i]]
+            except KeyError:
+                log_output(f'Key error with {splits[i]}')
+    new_file.write(''.join(splits))
 
 
 # === GETTERS ===
@@ -145,117 +155,115 @@ def show_interface():
 
 # === MAIN ===
 if __name__ == '__main__':
-    log_output('Welcome to the Sandbox Mod Installer')
-    log_output('Please wait until this console says "Finished!"')
-    log_output('======================================================\n\n\n')
+    try:
+        log_output('Welcome to the Sandbox Mod Installer')
+        log_output('Please wait until this console says "Finished!"')
+        log_output('======================================================\n\n\n')
 
-    #Get game variant
-    dir_path = dirname(os.path.realpath(__file__))
-    base_folder = os.path.basename(os.path.normpath(dir_path))
-    if base_folder == 'Wargame Red Dragon':
-        game_variant = 'Steam'
-    elif base_folder == 'WargameRedDragon':
-        game_variant = 'Epic'
-    else:
-        log_output('Please place this in your Wargame Red Dragon folder')
-        exit()
-    log_output(f'Game variant: {game_variant}')
+        #Get game variant
+        dir_path = dirname(os.path.realpath(__file__))
+        base_folder = os.path.basename(os.path.normpath(dir_path))
+        if base_folder == 'Wargame Red Dragon':
+            game_variant = 'Steam'
+        elif base_folder == 'WargameRedDragon':
+            game_variant = 'Epic'
+        else:
+            log_output('Please place this in your Wargame Red Dragon folder')
+            exit()
+        log_output(f'Game variant: {game_variant}')
 
-    #Get most current version
-    if not os.path.isdir(join(dir_path, MOD_FOLDER)):
-        log_output('Mod not downloaded yet')
-        get_zip_from_github()
-    else:
-        if get_online_version() != get_current_version():
-            log_output('Local mod outdated, getting new version')
-            log_output(f'Online version: {get_online_version()}, Local version: {get_current_version()}')
+        #Get most current version
+        if not os.path.isdir(join(dir_path, MOD_FOLDER)):
+            log_output('Mod not downloaded yet')
             get_zip_from_github()
         else:
-            log_output('Local mod is most updated version')
+            if get_online_version() != get_current_version():
+                log_output('Local mod outdated, getting new version')
+                log_output(f'Online version: {get_online_version()}, Local version: {get_current_version()}')
+                get_zip_from_github()
+            else:
+                log_output('Local mod is most updated version')
 
-    #Load installation paths
-    log_output('Getting install config')
-    install_config = load_configuration()
+        #Load installation paths
+        log_output('Getting install config')
+        install_config = load_configuration()
 
-    #Check to see if installing from patch log
-    hide_interface = False
-    if os.path.isfile(PATCHES_LOG):
-        log_output('Patch log detected, installing from log instead of showing interface')
-        hide_interface = True
-        with open(PATCHES_LOG, 'r') as patches_log:
-            patches_to_apply = patches_log.read().splitlines()
+        #Check to see if installing from patch log
+        hide_interface = False
+        if os.path.isfile(PATCHES_LOG):
+            log_output('Patch log detected, installing from log instead of showing interface')
+            hide_interface = True
+            with open(PATCHES_LOG, 'r') as patches_log:
+                patches_to_apply = patches_log.read().splitlines()
 
-    #Show interface
-    if not hide_interface:
-        log_output('Showing interface')
-        show_interface()
-        if install_canceled:
-            log_output('Install canceled')
+        #Show interface
+        if not hide_interface:
+            log_output('Showing interface')
+            show_interface()
+            if install_canceled:
+                log_output('Install canceled')
+                exit()
+
+        #Logging patches applied
+        if patches_to_apply == []:
+            log_output('No patches applied')
+            input("Press enter to continue...")
             exit()
-
-    #Logging patches applied
-    if patches_to_apply == []:
-        log_output('No patches applied')
-        input("Press enter to continue...")
-        exit()
-    if mod_from_backup:
-        patches_log = open(join(MOD_FOLDER, PATCHES_LOG), 'w+')
-    else:
-        patches_log = open(join(MOD_FOLDER, PATCHES_LOG), 'a+')
-    for patch in patches_to_apply:
-        patches_log.write(patch)
-        patches_log.write('\n')
-    patches_log.close()
-
-    #Make original NDF_Win.dat file if needed
-    log_output(f'{mod_from_backup=}')
-    pc_path = join('Data', 'WARGAME', 'PC')
-    ndf_path = join(pc_path, install_config[game_variant]["NDF_Win.dat"], "NDF_Win.dat")
-    full_ndf_path = join(dir_path, ndf_path)
-    if not os.path.isfile(ndf_path+PRESANDBOX_SUFFIX):
-        log_output('Backup does not exist')
-        copyfile(full_ndf_path, full_ndf_path+PRESANDBOX_SUFFIX)
-    else:
         if mod_from_backup:
-            os.remove(full_ndf_path)
-            copyfile(full_ndf_path + PRESANDBOX_SUFFIX, full_ndf_path)
+            patches_log = open(join(MOD_FOLDER, PATCHES_LOG), 'w+')
+        else:
+            patches_log = open(join(MOD_FOLDER, PATCHES_LOG), 'a+')
+        for patch in patches_to_apply:
+            patches_log.write(patch)
+            patches_log.write('\n')
+        patches_log.close()
 
-    #Call patcher
-    log_output('Patching, this might take a while...\n')
-    patcher_call_list = []
-    for patch_path in patches_to_apply:
-        patcher_call_list += [f'{MOD_FOLDER}\\Script Library\\{patch_path}']
-    patcher_call = [f'{MOD_FOLDER}\\Patcher\\WGPatcher.exe', 'apply', full_ndf_path] + patcher_call_list
-    log_output(f'Patcher Call: {" ".join(patcher_call)}')
-    patcher = subprocess.run([f'{MOD_FOLDER}\\Patcher\\WGPatcher.exe', 'apply', full_ndf_path] + patcher_call_list, cwd=dir_path)
-    move(join(dirname(full_ndf_path), 'ndf_win_patched.dat'), ndf_path)
+        #Make original NDF_Win.dat file if needed
+        log_output(f'{mod_from_backup=}')
+        pc_path = join('Data', 'WARGAME', 'PC')
+        ndf_path = join(pc_path, install_config[game_variant]["NDF_Win.dat"], "NDF_Win.dat")
+        full_ndf_path = join(dir_path, ndf_path)
+        if not os.path.isfile(ndf_path+PRESANDBOX_SUFFIX):
+            log_output('Backup does not exist')
+            copyfile(full_ndf_path, full_ndf_path+PRESANDBOX_SUFFIX)
+        else:
+            if mod_from_backup:
+                os.remove(full_ndf_path)
+                copyfile(full_ndf_path + PRESANDBOX_SUFFIX, full_ndf_path)
 
-    #Make installerConfig
-    log_output('Making asset installerConfig')
-    config_replacements = {
-        'mod_version': get_current_version(),
-        'game_version': install_config[game_variant]["NDF_Win.dat"],
-        'NDF_Win.dat-path': install_config[game_variant]["NDF_Win.dat"],
-        'ZZ_Win.dat|interface_outgame-path': install_config[game_variant]["ZZ_Win.dat-interface_outgame"],
-        'Data.dat-path': install_config[game_variant]["Data.dat"],
-        'ZZ_4.dat-path': install_config[game_variant]["ZZ_4.dat"],}
-    with open(join(MOD_FOLDER, 'Installer', 'installerConfigTemplate.wmi')) as config_file:
-        contents = config_file.read()
-        splits = contents.split('%')
-        for i in range(len(splits)):
-            if i % 2:
-                try:
-                    splits[i] = config_replacements[splits[i]]
-                except KeyError:
-                    log_output(f'Key error with {splits[i]}')
-        with open(join(MOD_FOLDER, 'Installer', 'installerConfig.wmi'), 'w+') as final_config:
-            final_config.write(''.join(splits))
+        #Call patcher
+        log_output('Patching, this might take a while...\n')
+        patcher_call_list = []
+        for patch_path in patches_to_apply:
+            patcher_call_list += [f'{MOD_FOLDER}\\Script Library\\{patch_path}']
+        patcher_call = [f'{MOD_FOLDER}\\Patcher\\WGPatcher.exe', 'apply', full_ndf_path] + patcher_call_list
+        log_output(f'Patcher Call: {" ".join(patcher_call)}')
+        patcher = subprocess.run([f'{MOD_FOLDER}\\Patcher\\WGPatcher.exe', 'apply', full_ndf_path] + patcher_call_list, cwd=dir_path)
+        move(join(dirname(full_ndf_path), 'ndf_win_patched.dat'), ndf_path)
 
-    #Run asset installer
-    log_output('Running asset installer')
-    asset_installer = subprocess.run('WargameModInstaller.exe', cwd=join(dir_path, MOD_FOLDER, 'Installer'), shell=True)
+        #Make installerConfig
+        log_output('Making asset installerConfig')
+        config_replacements = {
+            'mod_version': get_current_version(),
+            'game_version': install_config[game_variant]["NDF_Win.dat"],
+            'NDF_Win.dat-path': install_config[game_variant]["NDF_Win.dat"],
+            'ZZ_Win.dat|interface_outgame-path': install_config[game_variant]["ZZ_Win.dat-interface_outgame"],
+            'Data.dat-path': install_config[game_variant]["Data.dat"],
+            'ZZ_4.dat-path': install_config[game_variant]["ZZ_4.dat"],}
+        with open(join(MOD_FOLDER, 'Installer', 'installerConfigTemplate.wmi')) as config_file, open(join(MOD_FOLDER, 'Installer', 'installerConfig.wmi'), 'w+') as new_file:
+            write_config(config_file, new_file)
+        with open(join(MOD_FOLDER, 'Uninstaller', 'uninstallerConfigTemplate.wmi')) as config_file, open(join(MOD_FOLDER, 'Uninstaller', 'uninstallerConfig.wmi'), 'w+') as new_file:
+            write_config(config_file, new_file)
+
+        #Run asset installer
+        log_output('Running asset installer')
+        asset_installer = subprocess.run('WargameModInstaller.exe', cwd=join(dir_path, MOD_FOLDER, 'Installer'), shell=True)
 
 
 
-    log_output('\nFinished!')
-    input("Press enter to exit...")
+        log_output('\nFinished!')
+        input("Press enter to exit...")
+
+    except Exception as e:
+        log_output(f'\nERROR: {e}')
+        input("Press enter to exit...")
