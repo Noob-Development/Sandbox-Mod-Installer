@@ -16,8 +16,8 @@ import urllib.request
 import zipfile
 import wx
 
-INSTALLER_VERSION = '1.0.3'
-RELEASE_URL = 'https://api.github.com/repos/TheWRDNoob/Sandbox-Mod-Files/releases/latest'
+INSTALLER_VERSION = '1.0.4'
+RELEASE_URL = 'https://api.github.com/repos/Noob-Development/Sandbox-Mod-Files/releases/latest'
 MOD_FOLDER = 'SandboxMod'
 PATCHES_LOG = 'patch_list.txt'
 PATCHER_JSON = 'patcher_paths.json'
