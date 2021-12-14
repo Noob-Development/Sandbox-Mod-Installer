@@ -232,7 +232,10 @@ if __name__ == '__main__':
                 copyfile(full_ndf_path + PRESANDBOX_SUFFIX, full_ndf_path)
 
         #Call patcher
-        log_output('Patching, this might take a while...\n')
+        log_output('\n')
+        log_output('This normaly takes around 5 minutes to complete! The install will say when its done!')
+        log_output('\n')
+
         patcher_call_list = []
         for patch_path in patches_to_apply:
             patcher_call_list += [f'{MOD_FOLDER}\\Script Library\\{patch_path}']
