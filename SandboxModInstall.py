@@ -29,7 +29,7 @@ ZIP_NAME = 'master.zip'
 
 patches_to_apply = []
 game_variant = 'Steam'
-output_file = open('SandboxInstallOutput.txt', 'w+')
+output_file = open('SandboxInstallOutput.txt', 'w+', encoding='utf-8')
 mod_from_backup = True #Whether to use the patcher on the backup or on the currently installed NDF_Win.dat
 install_canceled = True #Should we stop after component selection
 
@@ -78,15 +78,15 @@ def get_online_version():
     return json.loads(requests.get(RELEASE_URL, allow_redirects=True).content)['tag_name']
 
 def get_current_version():
-    with open(join(MOD_FOLDER, 'version.txt')) as version_file:
+    with open(join(MOD_FOLDER, 'version.txt'), encoding='utf-8') as version_file:
         return version_file.read().strip()
 
 def load_patcher_json():
-    with open(join(MOD_FOLDER, PATCHER_JSON)) as patcher_json:
+    with open(join(MOD_FOLDER, PATCHER_JSON), encoding='utf-8') as patcher_json:
         return json.load(patcher_json)
 
 def load_configuration():
-    with open(join(MOD_FOLDER, INSTALL_JSON)) as install_json:
+    with open(join(MOD_FOLDER, INSTALL_JSON), encoding='utf-8') as install_json:
         return json.load(install_json)
 
 
@@ -193,7 +193,7 @@ if __name__ == '__main__':
         if os.path.isfile(PATCHES_LOG):
             log_output('Patch log detected, installing from log instead of showing interface')
             hide_interface = True
-            with open(PATCHES_LOG, 'r') as patches_log:
+            with open(PATCHES_LOG, 'r', encoding='utf-8') as patches_log:
                 patches_to_apply = patches_log.read().splitlines()
 
         #Show interface
@@ -210,9 +210,9 @@ if __name__ == '__main__':
             input("Press enter to continue...")
             exit()
         if mod_from_backup:
-            patches_log = open(join(MOD_FOLDER, PATCHES_LOG), 'w+')
+            patches_log = open(join(MOD_FOLDER, PATCHES_LOG), 'w+', encoding='utf-8')
         else:
-            patches_log = open(join(MOD_FOLDER, PATCHES_LOG), 'a+')
+            patches_log = open(join(MOD_FOLDER, PATCHES_LOG), 'a+', encoding='utf-8')
         for patch in patches_to_apply:
             patches_log.write(patch)
             patches_log.write('\n')
@@ -253,9 +253,9 @@ if __name__ == '__main__':
             'ZZ_Win.dat|interface_outgame-path': install_config[game_variant]["ZZ_Win.dat-interface_outgame"],
             'Data.dat-path': install_config[game_variant]["Data.dat"],
             'ZZ_4.dat-path': install_config[game_variant]["ZZ_4.dat"],}
-        with open(join(MOD_FOLDER, 'Installer', 'installerConfigTemplate.wmi')) as config_file, open(join(MOD_FOLDER, 'Installer', 'installerConfig.wmi'), 'w+') as new_file:
+        with open(join(MOD_FOLDER, 'Installer', 'installerConfigTemplate.wmi'), encoding='utf-8') as config_file, open(join(MOD_FOLDER, 'Installer', 'installerConfig.wmi'), 'w+', encoding='utf-8') as new_file:
             write_config(config_file, new_file)
-        with open(join(MOD_FOLDER, 'Uninstaller', 'uninstallerConfigTemplate.wmi')) as config_file, open(join(MOD_FOLDER, 'Uninstaller', 'uninstallerConfig.wmi'), 'w+') as new_file:
+        with open(join(MOD_FOLDER, 'Uninstaller', 'uninstallerConfigTemplate.wmi'), encoding='utf-8') as config_file, open(join(MOD_FOLDER, 'Uninstaller', 'uninstallerConfig.wmi'), 'w+', encoding='utf-8') as new_file:
             write_config(config_file, new_file)
 
         #Run asset installer
