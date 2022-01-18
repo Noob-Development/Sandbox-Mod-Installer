@@ -15,6 +15,8 @@ from sys import exit
 import urllib.request
 import zipfile
 import wx
+import ctypes, sys
+
 
 INSTALLER_VERSION = '1.0.6'
 RELEASE_URL = 'https://api.github.com/repos/Noob-Development/Sandbox-Mod-Files/releases/latest'
@@ -53,6 +55,11 @@ def write_config(config_file, new_file):
                 log_output(f'Key error with {splits[i]}')
     new_file.write(''.join(splits))
 
+def is_admin():
+    try:
+        return ctypes.windll.shell32.IsUserAnAdmin()
+    except:
+        return False
 
 # === GETTERS ===
 def get_zip_from_github():
@@ -119,38 +126,42 @@ def wx_check(e):
     else:
         for name in names:
             patches_to_apply.remove(name)
-
 def show_interface():
-    """
-    Loads entire interface
-    """
-    app = wx.App(False)  # Create a new app, don't redirect stdout/stderr to a window.
-    frame = wx.Frame(None, wx.ID_ANY, "Sandbox Mod Components")  # A Frame is a top-level window.
-    wx.StaticText(frame, label='Select "Modify what is currently loaded" if applying Sandbox on top of another mod', pos=(5, 5))
-    frame.Bind(wx.EVT_RADIOBUTTON, wx_radio)
-    wx.RadioButton(frame, label='Modify from backup', name='1', pos=(5, 30))
-    wx.RadioButton(frame, label='Modify what is currently loaded', name='0', pos=(170, 30))
-    frame.Bind(wx.EVT_BUTTON, wx_button)
-    wx.Button(frame, label='Install!', pos=((WINDOW_X-100)//2, 60))
+    if is_admin():
+        """
+        Loads entire interface
+        """
+        app = wx.App(False)  # Create a new app, don't redirect stdout/stderr to a window.
+        frame = wx.Frame(None, wx.ID_ANY, "Sandbox Mod Components")  # A Frame is a top-level window.
+        wx.StaticText(frame, label='Select "Modify what is currently loaded" if applying Sandbox on top of another mod', pos=(5, 5))
+        frame.Bind(wx.EVT_RADIOBUTTON, wx_radio)
+        wx.RadioButton(frame, label='Modify from backup', name='1', pos=(5, 30))
+        wx.RadioButton(frame, label='Modify what is currently loaded', name='0', pos=(170, 30))
+        frame.Bind(wx.EVT_BUTTON, wx_button)
+        wx.Button(frame, label='Install!', pos=((WINDOW_X-100)//2, 60))
 
-    patcher_json = load_patcher_json()
-    frame.Bind(wx.EVT_CHECKBOX, wx_check)
-    window = wx.ScrolledWindow(frame, pos=(0, 90))
-    y_pos = 0 #var for keeping track of current y pos
-    for category in patcher_json.keys():
-        wx.StaticText(window, label=category, pos=(5, y_pos))
-        wx.StaticLine(window, 2, pos=(0, y_pos+20), size=(1, 250), style=wx.HORIZONTAL)
-        for option in patcher_json[category].keys():
-            y_pos+=20
-            name = ';'.join([join(category, file) for file in patcher_json[category][option]['paths']])
-            wx.CheckBox(window, label=option, pos=(10, y_pos), name=name).SetToolTip(wx.ToolTip(patcher_json[category][option]['desc']))
-        y_pos+=30
-    window.SetSize(wx.Size(WINDOW_X-20, WINDOW_Y-130))
-    scroll_unit = 10
-    window.SetScrollbars(scroll_unit, scroll_unit, 0, (y_pos)//scroll_unit)
-    frame.SetSize(wx.Size(WINDOW_X, WINDOW_Y))
-    frame.Show(True)  # Show the frame.
-    app.MainLoop()
+        patcher_json = load_patcher_json()
+        frame.Bind(wx.EVT_CHECKBOX, wx_check)
+        window = wx.ScrolledWindow(frame, pos=(0, 90))
+        y_pos = 0 #var for keeping track of current y pos
+        for category in patcher_json.keys():
+            wx.StaticText(window, label=category, pos=(5, y_pos))
+            wx.StaticLine(window, 2, pos=(0, y_pos+20), size=(1, 250), style=wx.HORIZONTAL)
+            for option in patcher_json[category].keys():
+                y_pos+=20
+                name = ';'.join([join(category, file) for file in patcher_json[category][option]['paths']])
+                wx.CheckBox(window, label=option, pos=(10, y_pos), name=name).SetToolTip(wx.ToolTip(patcher_json[category][option]['desc']))
+            y_pos+=30
+        window.SetSize(wx.Size(WINDOW_X-20, WINDOW_Y-130))
+        scroll_unit = 10
+        window.SetScrollbars(scroll_unit, scroll_unit, 0, (y_pos)//scroll_unit)
+        frame.SetSize(wx.Size(WINDOW_X, WINDOW_Y))
+        frame.Show(True)  # Show the frame.
+        app.MainLoop()
+    else:
+        # Re-run the program with admin rights
+        ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
+
 
 
 # === MAIN ===
