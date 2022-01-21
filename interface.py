@@ -63,7 +63,7 @@ class MyFrame1 ( wx.Frame ):
 		self.m_scrolledWindow1.SetMinSize( wx.Size( -1,420 ) )
 		self.m_scrolledWindow1.SetMaxSize( wx.Size( -1,420 ) )
 
-		bSizer1.Add( self.m_scrolledWindow1, 1, wx.ALIGN_CENTER|wx.ALL|wx.EXPAND, 2 )
+		bSizer1.Add( self.m_scrolledWindow1, 1, wx.EXPAND, 2 )
 
 		self.m_staticText2 = wx.StaticText( self, wx.ID_ANY, u"Created and maintained by Noob Development", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText2.Wrap( -1 )
@@ -93,3 +93,6 @@ class MyFrame1 ( wx.Frame ):
 
 	def __del__( self ):
 		pass
+
+if __name__ == '__main__':
+	pass
