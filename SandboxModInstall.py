@@ -17,6 +17,8 @@ import zipfile
 import wx
 import ctypes, sys
 
+from interface import MyFrame1
+
 
 INSTALLER_VERSION = '1.0.6'
 RELEASE_URL = 'https://api.github.com/repos/Noob-Development/Sandbox-Mod-Files/releases/latest'
@@ -28,12 +30,13 @@ PRESANDBOX_SUFFIX = '_pre-sandbox'
 WINDOW_X = 500
 WINDOW_Y = 600
 ZIP_NAME = 'master.zip'
+DEVMODE = True
 
 patches_to_apply = []
 game_variant = 'Steam'
 output_file = open('SandboxInstallOutput.txt', 'w+', encoding='utf-8')
 mod_from_backup = True #Whether to use the patcher on the backup or on the currently installed NDF_Win.dat
-install_canceled = True #Should we stop after component selection
+install_cancelled = True #Should we stop after component selection
 
 
 # === HELPERS ===
@@ -110,8 +113,8 @@ def wx_button(e):
     """
     WxPython radio button handler, changes game_variant
     """
-    global install_canceled
-    install_canceled = False
+    global install_cancelled
+    install_cancelled = False
     e.GetEventObject().GetParent().Close()
 
 def wx_check(e):
@@ -126,6 +129,7 @@ def wx_check(e):
     else:
         for name in names:
             patches_to_apply.remove(name)
+
 def show_interface():
     if is_admin():
         """
@@ -178,6 +182,8 @@ if __name__ == '__main__':
             game_variant = 'Steam'
         elif base_folder == 'WargameRedDragon':
             game_variant = 'Epic'
+        elif DEVMODE:
+            game_variant = 'Steam'
         else:
             log_output('Please place this in your Wargame Red Dragon folder')
             exit()
@@ -211,8 +217,8 @@ if __name__ == '__main__':
         if not hide_interface:
             log_output('Showing interface')
             show_interface()
-            if install_canceled:
-                log_output('Install canceled')
+            if install_cancelled:
+                log_output('Install cancelled')
                 exit()
 
         #Logging patches applied
