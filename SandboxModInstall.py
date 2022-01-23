@@ -1,13 +1,9 @@
-"""
-
-"""
-
-
 # === IMPORTS ===
 import os
 from os.path import join, dirname
 import requests
 import json
+import re
 from shutil import copyfile, move, rmtree
 import subprocess
 from sys import exit
@@ -17,7 +13,7 @@ import zipfile
 import wx
 import ctypes, sys
 
-from interface import MyFrame1
+from interface import Installer
 
 
 INSTALLER_VERSION = '1.0.6'
@@ -108,6 +104,7 @@ def wx_radio(e):
     event = e.GetEventObject()
     global mod_from_backup
     mod_from_backup = bool(int(event.GetName()))
+    log_output(mod_from_backup)
 
 def wx_button(e):
     """
@@ -137,7 +134,7 @@ def show_interface():
         """
         app = wx.App(False)  # Create a new app, don't redirect stdout/stderr to a window.
         #frame = wx.Frame(None, wx.ID_ANY, "Sandbox Mod Components")  # A Frame is a top-level window.
-        frame = MyFrame1(None)
+        frame = Installer(None)
         frame.Bind(wx.EVT_RADIOBUTTON, wx_radio)
         frame.Bind(wx.EVT_BUTTON, wx_button)
         patcher_json = load_patcher_json()

@@ -6,3 +6,4 @@ venv
 .idea
 SandboxInstallOutput.txt
 SandboxMod
+*.zip
