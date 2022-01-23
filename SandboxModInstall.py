@@ -23,8 +23,6 @@ PATCHES_LOG = 'patch_list.txt'
 PATCHER_JSON = 'patcher_paths.json'
 INSTALL_JSON = 'install_locations.json'
 PRESANDBOX_SUFFIX = '_pre-sandbox'
-WINDOW_X = 500
-WINDOW_Y = 600
 ZIP_NAME = 'master.zip'
 DEVMODE = True
 
