@@ -33,6 +33,7 @@ game_variant = 'Steam'
 #output_file = open('SandboxInstallOutput.txt', 'w+', encoding='utf-8')
 mod_from_backup = True #Whether to use the patcher on the backup or on the currently installed NDF_Win.dat
 install_cancelled = True #Should we stop after component selection
+compatability_mode = False #Should we run the WargameModInstaller.exe to change Images and videos
 
 #LOGGER CONFIG
 logger = logging.getLogger('logs')
@@ -126,8 +127,19 @@ def wx_radio(e):
     """
     event = e.GetEventObject()
     global mod_from_backup
-    mod_from_backup = bool(int(event.GetName()))
-
+    global compatability_mode
+    if event.GetName() == 'modbackup':
+        mod_from_backup = True
+        log_output('modbackup set to: True', 'debug')
+    if event.GetName() == 'modcorrently':
+        mod_from_backup = False
+        log_output('modcorrently set to: False', 'debug')
+    if event.GetName() == 'compatibilitymode':
+        compatability_mode = True
+        log_output('Compatibility mode set to: True', 'debug')
+    if event.GetName() == 'normalmode':
+        compatability_mode = False
+        log_output('Compatibility mode set to: False', 'debug')
 
 def wx_button(e):
     """
@@ -278,24 +290,27 @@ if __name__ == '__main__':
         move(join(dirname(full_ndf_path), 'ndf_win_patched.dat'), ndf_path)
 
         #Make installerConfig
-        log_output('Making asset installerConfig', 'debug')
-        config_replacements = {
-            'mod_version': get_current_version(),
-            'game_version': install_config[game_variant]["NDF_Win.dat"],
-            'NDF_Win.dat-path': install_config[game_variant]["NDF_Win.dat"],
-            'ZZ_Win.dat|interface_outgame-path': install_config[game_variant]["ZZ_Win.dat-interface_outgame"],
-            'Data.dat-path': install_config[game_variant]["Data.dat"],
-            'ZZ_4.dat-path': install_config[game_variant]["ZZ_4.dat"],}
-        with open(join(MOD_FOLDER, 'Installer', 'installerConfigTemplate.wmi'), encoding='utf-8') as config_file, open(join(MOD_FOLDER, 'Installer', 'installerConfig.wmi'), 'w+', encoding='utf-8') as new_file:
-            write_config(config_file, new_file)
-            log_output('Writing to installerconfig', 'debug')
-        with open(join(MOD_FOLDER, 'Uninstaller', 'uninstallerConfigTemplate.wmi'), encoding='utf-8') as config_file, open(join(MOD_FOLDER, 'Uninstaller', 'uninstallerConfig.wmi'), 'w+', encoding='utf-8') as new_file:
-            write_config(config_file, new_file)
-            log_output('Writing to uninstallerconfig', 'debug')
+        if compatability_mode:
+            log_output('Skipping WargameModInstaller.exe for compatability!', 'debug')
+        else:
+            log_output('Making asset installerConfig', 'debug')
+            config_replacements = {
+                'mod_version': get_current_version(),
+                'game_version': install_config[game_variant]["NDF_Win.dat"],
+                'NDF_Win.dat-path': install_config[game_variant]["NDF_Win.dat"],
+                'ZZ_Win.dat|interface_outgame-path': install_config[game_variant]["ZZ_Win.dat-interface_outgame"],
+                'Data.dat-path': install_config[game_variant]["Data.dat"],
+                'ZZ_4.dat-path': install_config[game_variant]["ZZ_4.dat"],}
+            with open(join(MOD_FOLDER, 'Installer', 'installerConfigTemplate.wmi'), encoding='utf-8') as config_file, open(join(MOD_FOLDER, 'Installer', 'installerConfig.wmi'), 'w+', encoding='utf-8') as new_file:
+                write_config(config_file, new_file)
+                log_output('Writing to installerconfig', 'debug')
+            with open(join(MOD_FOLDER, 'Uninstaller', 'uninstallerConfigTemplate.wmi'), encoding='utf-8') as config_file, open(join(MOD_FOLDER, 'Uninstaller', 'uninstallerConfig.wmi'), 'w+', encoding='utf-8') as new_file:
+                write_config(config_file, new_file)
+                log_output('Writing to uninstallerconfig', 'debug')
 
-        #Run asset installer
-        log_output('Running asset installer', 'debug')
-        asset_installer = subprocess.run('WargameModInstaller.exe', cwd=join(dir_path, MOD_FOLDER, 'Installer'), shell=True)
+            #Run asset installer
+            log_output('Running asset installer', 'debug')
+            asset_installer = subprocess.run('WargameModInstaller.exe', cwd=join(dir_path, MOD_FOLDER, 'Installer'), shell=True)
 
 
 
