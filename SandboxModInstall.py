@@ -25,8 +25,8 @@ PATCHER_JSON = 'patcher_paths.json'
 INSTALL_JSON = 'install_locations.json'
 PRESANDBOX_SUFFIX = '_pre-sandbox'
 ZIP_NAME = 'master.zip'
-DEVMODE = True
-DEBUGMODE = True
+DEVMODE = False
+DEBUGMODE = False
 
 patches_to_apply = []
 game_variant = 'Steam'
