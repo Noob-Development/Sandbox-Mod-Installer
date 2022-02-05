@@ -189,7 +189,7 @@ if __name__ == '__main__':
         #Set logging mode
         log_output('Welcome to the Sandbox Mod Installer', 'info')
         log_output('Please wait until this console says "Finished!"', 'info')
-        log_output('======================================================\n\n\n', 'info')
+        log_output('======================================================', 'info')
 
         #Get game variant
         dir_path = dirname(os.path.realpath(__file__))
@@ -265,9 +265,9 @@ if __name__ == '__main__':
                 copyfile(full_ndf_path + PRESANDBOX_SUFFIX, full_ndf_path)
 
         #Call patcher
-        log_output('\n', 'info')
+        log_output('', 'info')
         log_output('This normaly takes around 5 minutes to complete! The installer will say when its done!', 'info')
-        log_output('\n', 'info')
+        log_output('', 'info')
 
         patcher_call_list = []
         for patch_path in patches_to_apply:
