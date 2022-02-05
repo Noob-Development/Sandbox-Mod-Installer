@@ -17,7 +17,7 @@ import ctypes, sys
 from interface import Installer
 
 
-INSTALLER_VERSION = '1.0.6'
+INSTALLER_VERSION = '1.1.0'
 RELEASE_URL = 'https://api.github.com/repos/Noob-Development/Sandbox-Mod-Files/releases/latest'
 MOD_FOLDER = 'SandboxMod'
 PATCHES_LOG = 'patch_list.txt'
