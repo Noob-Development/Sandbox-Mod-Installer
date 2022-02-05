@@ -292,6 +292,9 @@ if __name__ == '__main__':
         #Make installerConfig
         if compatability_mode:
             log_output('Skipping WargameModInstaller.exe for compatability!', 'debug')
+            with open(join(MOD_FOLDER, 'Uninstaller', 'uninstallerConfigTemplate.wmi'), encoding='utf-8') as config_file, open(join(MOD_FOLDER, 'Uninstaller', 'uninstallerConfig.wmi'), 'w+', encoding='utf-8') as new_file:
+                write_config(config_file, new_file)
+                log_output('Writing to uninstallerconfig', 'debug')
         else:
             log_output('Making asset installerConfig', 'debug')
             config_replacements = {
