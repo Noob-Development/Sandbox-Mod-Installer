@@ -131,13 +131,13 @@ def wx_radio(e):
     if event.GetName() == 'modbackup':
         mod_from_backup = True
         log_output('modbackup set to: True', 'debug')
-    if event.GetName() == 'modcorrently':
+    elif event.GetName() == 'modcorrently':
         mod_from_backup = False
         log_output('modcorrently set to: False', 'debug')
-    if event.GetName() == 'compatibilitymode':
+    elif event.GetName() == 'compatibilitymode':
         compatability_mode = True
         log_output('Compatibility mode set to: True', 'debug')
-    if event.GetName() == 'normalmode':
+    elif event.GetName() == 'normalmode':
         compatability_mode = False
         log_output('Compatibility mode set to: False', 'debug')
 
