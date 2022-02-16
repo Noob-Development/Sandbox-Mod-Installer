@@ -292,16 +292,6 @@ if __name__ == '__main__':
         #Make installerConfig
         if compatability_mode:
             log_output('Skipping WargameModInstaller.exe for compatability!', 'debug')
-            config_replacements = {
-                'mod_version': get_current_version(),
-                'game_version': install_config[game_variant]["NDF_Win.dat"],
-                'NDF_Win.dat-path': install_config[game_variant]["NDF_Win.dat"],
-                'ZZ_Win.dat|interface_outgame-path': install_config[game_variant]["ZZ_Win.dat-interface_outgame"],
-                'Data.dat-path': install_config[game_variant]["Data.dat"],
-                'ZZ_4.dat-path': install_config[game_variant]["ZZ_4.dat"],}
-            with open(join(MOD_FOLDER, 'Uninstaller', 'uninstallerConfigTemplate.wmi'), encoding='utf-8') as config_file, open(join(MOD_FOLDER, 'Uninstaller', 'uninstallerConfig.wmi'), 'w+', encoding='utf-8') as new_file:
-                write_config(config_file, new_file)
-                log_output('Writing to uninstallerconfig', 'debug')
         else:
             log_output('Making asset installerConfig', 'debug')
             config_replacements = {
@@ -314,9 +304,6 @@ if __name__ == '__main__':
             with open(join(MOD_FOLDER, 'Installer', 'installerConfigTemplate.wmi'), encoding='utf-8') as config_file, open(join(MOD_FOLDER, 'Installer', 'installerConfig.wmi'), 'w+', encoding='utf-8') as new_file:
                 write_config(config_file, new_file)
                 log_output('Writing to installerconfig', 'debug')
-            with open(join(MOD_FOLDER, 'Uninstaller', 'uninstallerConfigTemplate.wmi'), encoding='utf-8') as config_file, open(join(MOD_FOLDER, 'Uninstaller', 'uninstallerConfig.wmi'), 'w+', encoding='utf-8') as new_file:
-                write_config(config_file, new_file)
-                log_output('Writing to uninstallerconfig', 'debug')
 
             #Run asset installer
             log_output('Running asset installer', 'debug')
