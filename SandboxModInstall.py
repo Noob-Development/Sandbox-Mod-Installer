@@ -17,7 +17,7 @@ import ctypes, sys
 from interface import Installer
 
 
-INSTALLER_VERSION = '1.1.0'
+INSTALLER_VERSION = '1.1.1'
 RELEASE_URL = 'https://api.github.com/repos/Noob-Development/Sandbox-Mod-Files/releases/latest'
 MOD_FOLDER = 'SandboxMod'
 PATCHES_LOG = 'patch_list.txt'
@@ -241,6 +241,7 @@ if __name__ == '__main__':
             with open(PATCHES_LOG, 'r', encoding='utf-8') as patches_log:
                 patches_to_apply = patches_log.read().splitlines()
 
+
         #Show interface
         if not hide_interface:
             log_output('Showing interface', 'debug')
@@ -291,6 +292,13 @@ if __name__ == '__main__':
 
         #Make installerConfig
         if compatability_mode:
+            config_replacements = {
+                'mod_version': get_current_version(),
+                'game_version': install_config[game_variant]["NDF_Win.dat"],
+                'NDF_Win.dat-path': install_config[game_variant]["NDF_Win.dat"],
+                'ZZ_Win.dat|interface_outgame-path': install_config[game_variant]["ZZ_Win.dat-interface_outgame"],
+                'Data.dat-path': install_config[game_variant]["Data.dat"],
+                'ZZ_4.dat-path': install_config[game_variant]["ZZ_4.dat"],}
             log_output('Skipping WargameModInstaller.exe for compatability!', 'debug')
         else:
             log_output('Making asset installerConfig', 'debug')
