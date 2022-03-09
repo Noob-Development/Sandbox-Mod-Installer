@@ -105,7 +105,7 @@ def get_zip_from_github():
     os.remove(ZIP_NAME)
 
 def get_online_version():
-    return json.loads(requests.get(RELEASE_URL, allow_redirects=True).content)['tag_name']
+    return json.loads(requests.get(RELEASE_URL, allow_redirects=True).content)['name']
 
 def get_current_version():
     with open(join(MOD_FOLDER, 'version.txt'), encoding='utf-8') as version_file:
@@ -168,13 +168,11 @@ def show_interface():
         Loads entire interface
         """
         app = wx.App(False)  # Create a new app, don't redirect stdout/stderr to a window.
-        #frame = wx.Frame(None, wx.ID_ANY, "Sandbox Mod Components")  # A Frame is a top-level window.
         frame = Installer(None)
         frame.Bind(wx.EVT_RADIOBUTTON, wx_radio)
         frame.Bind(wx.EVT_BUTTON, wx_button)
         patcher_json = load_patcher_json()
         frame.Bind(wx.EVT_CHECKBOX, wx_check)
-        #window = wx.ScrolledWindow(frame, pos=(0, 90))
         window = frame.m_scrolledWindow1
         y_pos = 0 #var for keeping track of current y pos
         for category in patcher_json.keys():
