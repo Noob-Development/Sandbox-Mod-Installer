@@ -9,14 +9,14 @@ import wx.adv
 class Popup ( wx.Frame ):
 
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Mod Version Selector", pos = wx.DefaultPosition, size = wx.Size( 561,137 ), style = wx.CAPTION|wx.CLOSE_BOX|wx.MINIMIZE|wx.MINIMIZE_BOX|wx.SYSTEM_MENU|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Mod Version Selector", pos = wx.DefaultPosition, size = wx.Size( 289,186 ), style = wx.CAPTION|wx.CLOSE_BOX|wx.MINIMIZE|wx.MINIMIZE_BOX|wx.SYSTEM_MENU|wx.TAB_TRAVERSAL )
 
 		self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 		self.SetBackgroundColour( wx.Colour( 34, 36, 49 ) )
 
 		bSizer10 = wx.BoxSizer( wx.VERTICAL )
 
-		fgSizer13 = wx.FlexGridSizer( 0, 3, 0, 10 )
+		fgSizer13 = wx.FlexGridSizer( 3, 1, 0, 10 )
 		fgSizer13.SetFlexibleDirection( wx.BOTH )
 		fgSizer13.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
 
