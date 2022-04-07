@@ -22,7 +22,7 @@ Epic Games: `C:\Program Files\Epic Games\WargameRedDragon`
 90% of the time, if there is any error that pops up, running the installer again will make it work perfectly. If that does not work and it is a matter of permissions, try Running as Administrator. If all fails, join the [Sandbox Mod Discord](https://discord.gg/kqvneca5Dr "Sandbox Mod Discord") and post the contents of `SandboxInstallOutput.txt` in the #help channel.
 
 #### Uninstalling:
-To uninstall, run WargameModInstaller in `%Wargame Folder%\SandboxMod\Uninstaller` and click the "Uninstall option". There could be edge cases when even after uninstalling, not all files will be the original. In that case, re-run and use the "Hard Uninstall" option.
+To uninstall the mod you go into steam or epic games and use there verify process.
 
 
 
