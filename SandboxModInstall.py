@@ -17,7 +17,7 @@ import ctypes, sys
 from interface import Installer
 
 
-INSTALLER_VERSION = '1.1.0'
+INSTALLER_VERSION = '1.1.1'
 RELEASE_URL = 'https://api.github.com/repos/Noob-Development/Sandbox-Mod-Files/releases/latest'
 MOD_FOLDER = 'SandboxMod'
 PATCHES_LOG = 'patch_list.txt'
@@ -25,8 +25,8 @@ PATCHER_JSON = 'patcher_paths.json'
 INSTALL_JSON = 'install_locations.json'
 PRESANDBOX_SUFFIX = '_pre-sandbox'
 ZIP_NAME = 'master.zip'
-DEVMODE = True
-DEBUGMODE = True
+DEVMODE = False
+DEBUGMODE = False
 
 patches_to_apply = []
 game_variant = 'Steam'
@@ -239,6 +239,7 @@ if __name__ == '__main__':
             with open(PATCHES_LOG, 'r', encoding='utf-8') as patches_log:
                 patches_to_apply = patches_log.read().splitlines()
 
+
         #Show interface
         if not hide_interface:
             log_output('Showing interface', 'debug')
@@ -289,7 +290,6 @@ if __name__ == '__main__':
 
         #Make installerConfig
         if compatability_mode:
-            log_output('Skipping WargameModInstaller.exe for compatability!', 'debug')
             config_replacements = {
                 'mod_version': get_current_version(),
                 'game_version': install_config[game_variant]["NDF_Win.dat"],
@@ -297,9 +297,7 @@ if __name__ == '__main__':
                 'ZZ_Win.dat|interface_outgame-path': install_config[game_variant]["ZZ_Win.dat-interface_outgame"],
                 'Data.dat-path': install_config[game_variant]["Data.dat"],
                 'ZZ_4.dat-path': install_config[game_variant]["ZZ_4.dat"],}
-            with open(join(MOD_FOLDER, 'Uninstaller', 'uninstallerConfigTemplate.wmi'), encoding='utf-8') as config_file, open(join(MOD_FOLDER, 'Uninstaller', 'uninstallerConfig.wmi'), 'w+', encoding='utf-8') as new_file:
-                write_config(config_file, new_file)
-                log_output('Writing to uninstallerconfig', 'debug')
+            log_output('Skipping WargameModInstaller.exe for compatability!', 'debug')
         else:
             log_output('Making asset installerConfig', 'debug')
             config_replacements = {
@@ -312,9 +310,6 @@ if __name__ == '__main__':
             with open(join(MOD_FOLDER, 'Installer', 'installerConfigTemplate.wmi'), encoding='utf-8') as config_file, open(join(MOD_FOLDER, 'Installer', 'installerConfig.wmi'), 'w+', encoding='utf-8') as new_file:
                 write_config(config_file, new_file)
                 log_output('Writing to installerconfig', 'debug')
-            with open(join(MOD_FOLDER, 'Uninstaller', 'uninstallerConfigTemplate.wmi'), encoding='utf-8') as config_file, open(join(MOD_FOLDER, 'Uninstaller', 'uninstallerConfig.wmi'), 'w+', encoding='utf-8') as new_file:
-                write_config(config_file, new_file)
-                log_output('Writing to uninstallerconfig', 'debug')
 
             #Run asset installer
             log_output('Running asset installer', 'debug')
