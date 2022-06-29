@@ -30,7 +30,6 @@ DEBUGMODE = False
 
 patches_to_apply = []
 game_variant = 'Steam'
-#output_file = open('SandboxInstallOutput.txt', 'w+', encoding='utf-8')
 mod_from_backup = True #Whether to use the patcher on the backup or on the currently installed NDF_Win.dat
 install_cancelled = True #Should we stop after component selection
 compatability_mode = False #Should we run the WargameModInstaller.exe to change Images and videos
@@ -289,16 +288,7 @@ if __name__ == '__main__':
         move(join(dirname(full_ndf_path), 'ndf_win_patched.dat'), ndf_path)
 
         #Make installerConfig
-        if compatability_mode:
-            config_replacements = {
-                'mod_version': get_current_version(),
-                'game_version': install_config[game_variant]["NDF_Win.dat"],
-                'NDF_Win.dat-path': install_config[game_variant]["NDF_Win.dat"],
-                'ZZ_Win.dat|interface_outgame-path': install_config[game_variant]["ZZ_Win.dat-interface_outgame"],
-                'Data.dat-path': install_config[game_variant]["Data.dat"],
-                'ZZ_4.dat-path': install_config[game_variant]["ZZ_4.dat"],}
-            log_output('Skipping WargameModInstaller.exe for compatability!', 'debug')
-        else:
+        if compatability_mode == False:
             log_output('Making asset installerConfig', 'debug')
             config_replacements = {
                 'mod_version': get_current_version(),
