@@ -32,92 +32,96 @@ class MainInterface ( wx.Frame ):
         self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
         self.SetBackgroundColour( wx.Colour( 34, 39, 46 ) )
 
-        self.m_menubar2 = wx.MenuBar( 0 )
-        self.credit = wx.Menu()
-        self.discord = wx.MenuItem( self.credit, ID_DISCORD, _(u"Discord"), wx.EmptyString, wx.ITEM_NORMAL )
-        self.credit.Append( self.discord )
+        # Menu bar
+        self.menuBar = wx.MenuBar(0)
+        self.creditMenu = wx.Menu()
 
-        self.github = wx.MenuItem( self.credit, ID_GITHUB, _(u"GitHub"), wx.EmptyString, wx.ITEM_NORMAL )
-        self.credit.Append( self.github )
+        # Credit menu items
+        self.creditDiscordItem = wx.MenuItem(self.creditMenu, ID_DISCORD, _(u"Discord"), wx.EmptyString, wx.ITEM_NORMAL)
+        self.creditMenu.Append(self.creditDiscordItem)
 
-        self.credit.AppendSeparator()
+        self.creditGithubItem = wx.MenuItem(self.creditMenu, ID_GITHUB, _(u"GitHub"), wx.EmptyString, wx.ITEM_NORMAL)
+        self.creditMenu.Append(self.creditGithubItem)
 
-        self.byNoobDevelopment = wx.MenuItem( self.credit, ID_BY_NOOB_DEVELOPMENT, _(u"By Noob Development"), wx.EmptyString, wx.ITEM_NORMAL )
-        self.credit.Append( self.byNoobDevelopment )
+        self.creditMenu.AppendSeparator()
 
-        self.m_menubar2.Append( self.credit, _(u"Credit") )
+        self.creditByNoobDev = wx.MenuItem(self.creditMenu, ID_BY_NOOB_DEVELOPMENT, _(u"By Noob Development"), wx.EmptyString, wx.ITEM_NORMAL)
+        self.creditMenu.Append(self.creditByNoobDev)
 
-        self.SetMenuBar( self.m_menubar2 )
+        self.menuBar.Append(self.creditMenu, _(u"Credit"))
 
-        bSizer2 = wx.BoxSizer( wx.VERTICAL )
+        self.SetMenuBar(self.menuBar)
+
+        mainVerticalSizer = wx.BoxSizer(wx.VERTICAL)
 
         self.m_staticText2 = wx.StaticText( self, wx.ID_ANY, _(u"Select the mods you want applyed to the game and then press \"install\"."), wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText2.Wrap( -1 )
 
         self.m_staticText2.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_ACTIVEBORDER ) )
 
-        bSizer2.Add( self.m_staticText2, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+        mainVerticalSizer.Add(self.m_staticText2, 0, wx.ALL | wx.ALIGN_CENTER_HORIZONTAL, 5)
 
-        fgSizer1 = wx.FlexGridSizer( 0, 3, 0, 0 )
-        fgSizer1.SetFlexibleDirection( wx.BOTH )
-        fgSizer1.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
+        settingsGridSizer = wx.FlexGridSizer(0, 3, 0, 0)
+        settingsGridSizer.SetFlexibleDirection(wx.BOTH)
+        settingsGridSizer.SetNonFlexibleGrowMode(wx.FLEX_GROWMODE_SPECIFIED)
 
-        fgSizer1.SetMinSize( wx.Size( -1,300 ) )
-        self.m_staticText41 = wx.StaticText( self, wx.ID_ANY, _(u"Lobby"), wx.DefaultPosition, wx.DefaultSize, 0 )
-        self.m_staticText41.Wrap( -1 )
+        settingsGridSizer.SetMinSize(wx.Size(-1, 300))
+        self.lobbyTitle = wx.StaticText(self, wx.ID_ANY, _(u"Lobby"), wx.DefaultPosition, wx.DefaultSize, 0)
+        self.lobbyTitle.Wrap(-1)
 
-        self.m_staticText41.SetFont( wx.Font( 14, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "Arial" ) )
-        self.m_staticText41.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_ACTIVEBORDER ) )
+        self.lobbyTitle.SetFont(wx.Font(14, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "Arial"))
+        self.lobbyTitle.SetForegroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVEBORDER))
 
-        fgSizer1.Add( self.m_staticText41, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+        settingsGridSizer.Add(self.lobbyTitle, 0, wx.ALL | wx.ALIGN_CENTER_HORIZONTAL, 5)
 
-        self.m_staticText42 = wx.StaticText( self, wx.ID_ANY, _(u"Deck"), wx.DefaultPosition, wx.DefaultSize, 0 )
-        self.m_staticText42.Wrap( -1 )
+        self.deckTitle = wx.StaticText(self, wx.ID_ANY, _(u"Deck"), wx.DefaultPosition, wx.DefaultSize, 0)
+        self.deckTitle.Wrap(-1)
 
-        self.m_staticText42.SetFont( wx.Font( 14, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "Arial" ) )
-        self.m_staticText42.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_ACTIVEBORDER ) )
+        self.deckTitle.SetFont(wx.Font(14, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "Arial"))
+        self.deckTitle.SetForegroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVEBORDER))
 
-        fgSizer1.Add( self.m_staticText42, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+        settingsGridSizer.Add(self.deckTitle, 0, wx.ALL | wx.ALIGN_CENTER_HORIZONTAL, 5)
 
-        self.m_staticText43 = wx.StaticText( self, wx.ID_ANY, _(u"Gameplay"), wx.DefaultPosition, wx.DefaultSize, 0 )
-        self.m_staticText43.Wrap( -1 )
+        self.gameplayTitle = wx.StaticText(self, wx.ID_ANY, _(u"Gameplay"), wx.DefaultPosition, wx.DefaultSize, 0)
+        self.gameplayTitle.Wrap(-1)
 
-        self.m_staticText43.SetFont( wx.Font( 14, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "Arial" ) )
-        self.m_staticText43.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_ACTIVEBORDER ) )
+        self.gameplayTitle.SetFont(wx.Font(14, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "Arial"))
+        self.gameplayTitle.SetForegroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVEBORDER))
 
-        fgSizer1.Add( self.m_staticText43, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+        settingsGridSizer.Add(self.gameplayTitle, 0, wx.ALL | wx.ALIGN_CENTER_HORIZONTAL, 5)
 
-        self.lobbySel = wx.ScrolledWindow( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.HSCROLL|wx.VSCROLL )
-        self.lobbySel.SetScrollRate( 5, 5 )
-        self.lobbySel.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWFRAME ) )
-        self.lobbySel.SetMinSize( wx.Size( 280,-1 ) )
-        self.lobbySel.SetMaxSize( wx.Size( -1,250 ) )
+        self.lobbySettings = wx.ScrolledWindow(self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.HSCROLL | wx.VSCROLL)
+        self.lobbySettings.SetScrollRate(5, 5)
+        self.lobbySettings.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_WINDOWFRAME))
+        self.lobbySettings.SetMinSize(wx.Size(280, -1))
+        self.lobbySettings.SetMaxSize(wx.Size(-1, 250))
 
-        fgSizer1.Add( self.lobbySel, 1, wx.ALL|wx.EXPAND, 5 )
+        settingsGridSizer.Add(self.lobbySettings, 1, wx.ALL | wx.EXPAND, 5)
 
-        self.deckSel = wx.ScrolledWindow( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.HSCROLL|wx.VSCROLL )
-        self.deckSel.SetScrollRate( 5, 5 )
-        self.deckSel.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWFRAME ) )
-        self.deckSel.SetMinSize( wx.Size( 280,-1 ) )
-        self.deckSel.SetMaxSize( wx.Size( -1,250 ) )
+        self.deckSettings = wx.ScrolledWindow(self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.HSCROLL | wx.VSCROLL)
+        self.deckSettings.SetScrollRate(5, 5)
+        self.deckSettings.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_WINDOWFRAME))
+        self.deckSettings.SetMinSize(wx.Size(280, -1))
+        self.deckSettings.SetMaxSize(wx.Size(-1, 250))
 
-        fgSizer1.Add( self.deckSel, 1, wx.ALL|wx.EXPAND, 5 )
+        settingsGridSizer.Add(self.deckSettings, 1, wx.ALL | wx.EXPAND, 5)
 
-        self.gameplaySel = wx.ScrolledWindow( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.HSCROLL|wx.NO_FULL_REPAINT_ON_RESIZE|wx.VSCROLL )
-        self.gameplaySel.SetScrollRate( 10, 10 )
-        self.gameplaySel.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWFRAME ) )
-        self.gameplaySel.SetMinSize( wx.Size( 280,-1 ) )
-        self.gameplaySel.SetMaxSize( wx.Size( -1,250 ) )
+        self.gameplaySettings = wx.ScrolledWindow(self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.HSCROLL | wx.NO_FULL_REPAINT_ON_RESIZE | wx.VSCROLL)
+        self.gameplaySettings.SetScrollRate(10, 10)
+        self.gameplaySettings.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_WINDOWFRAME))
+        self.gameplaySettings.SetMinSize(wx.Size(280, -1))
+        self.gameplaySettings.SetMaxSize(wx.Size(-1, 250))
 
+        settingsGridSizer.Add(self.gameplaySettings, 1, wx.ALL | wx.EXPAND, 5)
 
         self.Bind(wx.EVT_CHECKBOX, self.optionCheck)
         for category in patcher_json.keys():
             if category == 'Lobby':
-                window = self.lobbySel
+                window = self.lobbySettings
             if category == 'Deck':
-                window = self.deckSel
+                window = self.deckSettings
             if category == 'Gameplay':
-                window = self.gameplaySel
+                window = self.gameplaySettings
 
             y_pos = 5
             for option in patcher_json[category].keys():
@@ -129,21 +133,18 @@ class MainInterface ( wx.Frame ):
         window.SetScrollbars(scroll_unit, scroll_unit, 0, (y_pos) // scroll_unit)
 
 
-        fgSizer1.Add( self.gameplaySel, 1, wx.ALL|wx.EXPAND, 5 )
+        mainVerticalSizer.Add(settingsGridSizer, 0, wx.ALIGN_CENTER, 5)
 
-
-        bSizer2.Add( fgSizer1, 0, wx.ALIGN_CENTER, 5 )
-
-        bSizer6 = wx.BoxSizer( wx.VERTICAL )
+        installButtonSizer = wx.BoxSizer(wx.VERTICAL)
 
         self.install = wx.Button( self, wx.ID_ANY, _(u"Install!"), wx.DefaultPosition, wx.DefaultSize, 0 )
-        bSizer6.Add( self.install, 0, wx.ALL, 5 )
+        installButtonSizer.Add(self.install, 0, wx.ALL, 5)
 
 
-        bSizer2.Add( bSizer6, 1, wx.ALIGN_CENTER_HORIZONTAL, 5 )
+        mainVerticalSizer.Add(installButtonSizer, 1, wx.ALIGN_CENTER_HORIZONTAL, 5)
 
 
-        self.SetSizer( bSizer2 )
+        self.SetSizer(mainVerticalSizer)
         self.Layout()
 
         self.Centre( wx.BOTH )
