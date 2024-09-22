@@ -1,10 +1,11 @@
 import os
 import zipfile
-from os.path import join, dirname
+from os.path import join
 from shutil import copyfile, move, rmtree
 import requests
 import urllib.request
 import json
+
 from loggingConfig import setupLogging
 
 logger = setupLogging()

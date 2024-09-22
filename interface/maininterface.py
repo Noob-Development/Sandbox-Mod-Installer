@@ -1,13 +1,11 @@
+from os.path import join
 import wx
 import wx.xrc
-
-from os.path import join, dirname
 import json
-
-import utils
-
 import gettext
 _ = gettext.gettext
+
+import utils
 
 ID_DISCORD = 6000
 ID_GITHUB = 6001

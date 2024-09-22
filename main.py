@@ -1,11 +1,6 @@
 import os
-import requests
 from os.path import join, dirname
 import wx
-import json
-
-from loggingConfig import setupLogging
-
 
 from shutil import copyfile, move, rmtree
 import subprocess
@@ -14,21 +9,13 @@ from interface.maininterface import *
 from interface.location import *
 import utils
 
+from loggingConfig import setupLogging
+
 logger = setupLogging()
 
 MOD_FOLDER = 'SandboxMod'
-
-
-INSTALLER_VERSION = '1.1.1'
-RELEASE_URL = 'https://api.github.com/repos/Noob-Development/Sandbox-Mod-Files/releases/latest'
-MOD_FOLDER = 'SandboxMod'
 PATCHES_LOG = 'patch_list.txt'
-PATCHER_JSON = 'patcher_paths.json'
-INSTALL_JSON = 'install_locations.json'
 PRESANDBOX_SUFFIX = '_pre-sandbox'
-ZIP_NAME = 'master.zip'
-DEVMODE = False
-DEBUGMODE = False
 
 
 def write_config(config_file, new_file):

@@ -1,10 +1,11 @@
 import os.path
 import wx
 import wx.xrc
-from interface.maininterface import MainInterface
-import utils
 import gettext
 _ = gettext.gettext
+
+from interface.maininterface import MainInterface
+import utils
 
 ID_DISCORD = 6000
 ID_GITHUB = 6001

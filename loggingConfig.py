@@ -1,4 +1,3 @@
-# logging_config.py
 import logging
 
 def setupLogging(log_file='SandboxInstallOutput.txt'):
