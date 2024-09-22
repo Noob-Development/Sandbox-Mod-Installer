@@ -31,31 +31,16 @@ DEVMODE = False
 DEBUGMODE = False
 
 
-logger = logging.getLogger('logs')
-logger.setLevel(logging.DEBUG)
-
-cli_handler = logging.StreamHandler()
-file_handler = logging.FileHandler('SandboxInstallOutput.txt')
-cli_handler.setLevel(logging.DEBUG)
-file_handler.setLevel(logging.DEBUG)
-
-cli_formatter = logging.Formatter('[%(levelname)s] %(message)s', '%H:%M:%S')
-file_formatter = logging.Formatter('[%(asctime)s] [%(levelname)s] %(message)s', '%H:%M:%S')
-
-cli_handler.setFormatter(cli_formatter)
-file_handler.setFormatter(file_formatter)
-logger.addHandler(cli_handler)
-logger.addHandler(file_handler)
-
-def log_output(text, level):
-    if level == 'info':
-        logger.info(text)
-    elif level == 'warning':
-        logger.warning(text)
-    elif level == 'error':
-        logger.error(text)
-    elif level == 'debug':
-        logger.debug(text)
+def write_config(config_file, new_file):
+    contents = config_file.read()
+    splits = contents.split('%')
+    for i in range(len(splits)):
+        if i % 2:
+            try:
+                splits[i] = config_replacements[splits[i]]
+            except KeyError:
+                utils.log_output(f'Key error with {splits[i]}', 'error')
+    new_file.write(''.join(splits))
 
 def main():
     app = wx.App()
@@ -143,6 +128,17 @@ if __name__ == '__main__':
         move(join(dirname(full_ndf_path), 'ndf_win_patched.dat'), full_ndf_path)
 
         #Make installerConfig
+        logger.debug('Making asset installer config file')
+        config_replacements = {
+            'mod_version': utils.get_current_version(),
+            'game_version': install_config[game_variant]["NDF_Win.dat"],
+            'NDF_Win.dat-path': install_config[game_variant]["NDF_Win.dat"],
+            'ZZ_Win.dat|interface_outgame-path': install_config[game_variant]["ZZ_Win.dat-interface_outgame"],
+            'Data.dat-path': install_config[game_variant]["Data.dat"],
+            'ZZ_4.dat-path': install_config[game_variant]["ZZ_4.dat"],}
+        with open(join(dir_path, MOD_FOLDER, 'Installer', 'installerConfigTemplate.wmi'), encoding='utf-8') as config_file, open(join(dir_path, MOD_FOLDER, 'Installer', 'installerConfig.wmi'), 'w+', encoding='utf-8') as new_file:
+            write_config(config_file, new_file)
+            logger.debug('Writing to installer config file')
 
         #Run asset installer
         logger.debug('Running asset installer')
