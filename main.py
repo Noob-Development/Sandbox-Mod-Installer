@@ -4,7 +4,7 @@ from os.path import join, dirname
 import wx
 import json
 
-import logging
+from loggingConfig import setupLogging
 
 
 from shutil import copyfile, move, rmtree
@@ -13,6 +13,8 @@ import subprocess
 from interface.maininterface import *
 from interface.location import *
 import utils
+
+logger = setupLogging()
 
 MOD_FOLDER = 'SandboxMod'
 
@@ -80,17 +82,17 @@ if __name__ == '__main__':
         elif base_folder == 'WargameRedDragon':
             game_variant = 'Epic'
         else:
-            log_output('Please place this in your Wargame Red Dragon folder', 'error')
+            logger.error('Please place this in your Wargame Red Dragon folder')
             exit()
-        log_output(f'Game variant: {game_variant}', 'info')
+        logger.info(f'Game variant: {game_variant}')
 
         #Load installation paths
-        log_output('Getting install config', 'info')
+        logger.info('Getting install config')
         install_config = utils.load_configuration()
 
         #Logging patches applied
         if utils.patches_to_apply == []:
-            log_output('No patches applied', 'info')
+            logger.info('No patches applied')
             input("Press enter to continue...")
             exit()
         #if mod_from_backup:
@@ -108,7 +110,7 @@ if __name__ == '__main__':
         ndf_path = join(pc_path, install_config[game_variant]["NDF_Win.dat"], "NDF_Win.dat")
         full_ndf_path = join(dir_path, ndf_path)
         if not os.path.isfile(full_ndf_path+PRESANDBOX_SUFFIX):
-            log_output('Backup does not exist','warning')
+            logger.warning('Backup does not exist, creating one!')
             copyfile(full_ndf_path, full_ndf_path+PRESANDBOX_SUFFIX)
         #else:
         #    if mod_from_backup:
@@ -116,9 +118,9 @@ if __name__ == '__main__':
         #        copyfile(full_ndf_path + PRESANDBOX_SUFFIX, full_ndf_path)
 
         #Call patcher
-        log_output('', 'info')
-        log_output('This normaly takes around 5 minutes to complete! The installer will say when its done!', 'info')
-        log_output('', 'info')
+        logger.info('')
+        logger.info('This can take up to 10 minutes to complete! The installer will say when its done!')
+        logger.info('')
 
         patcher_call_list = []
         for patch_path in utils.patches_to_apply:
@@ -130,27 +132,14 @@ if __name__ == '__main__':
 
         #Make installerConfig
 
-    #    if compatability_mode == False:
-    #        log_output('Making asset installerConfig', 'debug')
-    #        config_replacements = {
-    #            'mod_version': utils.get_current_version(),
-    #            'game_version': install_config[game_variant]["NDF_Win.dat"],
-    #            'NDF_Win.dat-path': install_config[game_variant]["NDF_Win.dat"],
-    #            'ZZ_Win.dat|interface_outgame-path': install_config[game_variant]["ZZ_Win.dat-interface_outgame"],
-    #            'Data.dat-path': install_config[game_variant]["Data.dat"],
-    #            'ZZ_4.dat-path': install_config[game_variant]["ZZ_4.dat"],}
-    #        with open(join(MOD_FOLDER, 'Installer', 'installerConfigTemplate.wmi'), encoding='utf-8') as config_file, open(join(MOD_FOLDER, 'Installer', 'installerConfig.wmi'), 'w+', encoding='utf-8') as new_file:
-    #            write_config(config_file, new_file)
-    #            log_output('Writing to installerconfig', 'debug')
-    #
-    #        #Run asset installer
-    #        log_output('Running asset installer', 'debug')
-    #        asset_installer = subprocess.run('WargameModInstaller.exe', cwd=join(dir_path, MOD_FOLDER, 'Installer'), shell=True)
+        #Run asset installer
+        logger.debug('Running asset installer')
+        asset_installer = subprocess.run('WargameModInstaller.exe', cwd=join(dir_path, MOD_FOLDER, 'Installer'), shell=True)
 
 
-        log_output('\nFinished!', 'info')
+        logger.info('Finished!')
         input("Press enter to exit...")
 
     except Exception as e:
-        log_output(f'\nERROR: {e}', 'error')
+        logger.critical(f'{e}')
         input("Press enter to exit...")

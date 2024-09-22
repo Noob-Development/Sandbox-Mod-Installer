@@ -5,39 +5,16 @@ from shutil import copyfile, move, rmtree
 import requests
 import urllib.request
 import json
-import logging
+from loggingConfig import setupLogging
 
-logger = logging.getLogger('log')
-
-cli_handler = logging.StreamHandler()
-file_handler = logging.FileHandler('SandboxInstallOutput.txt')
-cli_handler.setLevel(logging.WARNING)
-file_handler.setLevel(logging.DEBUG)
-
-cli_formatter = logging.Formatter('[%(levelname)s] %(message)s', '%H:%M:%S')
-file_formatter = logging.Formatter('[%(asctime)s] [%(levelname)s] %(message)s', '%H:%M:%S')
-
-cli_handler.setFormatter(cli_formatter)
-file_handler.setFormatter(file_formatter)
-logger.addHandler(cli_handler)
-logger.addHandler(file_handler)
+logger = setupLogging()
 
 MOD_FOLDER = 'SandboxMod'
 
 #Global veriables nice right?
 installLocation = None
 patches_to_apply = []
-
-def log_output(text, level):
-    if level == 'info':
-        logger.info(text)
-    elif level == 'warning':
-        logger.warning(text)
-    elif level == 'error':
-        logger.error(text)
-    elif level == 'debug':
-        logger.debug(text)
-
+mod_from_backup = True
 
 def get_version_and_download():
     #Get most current version
