@@ -38,12 +38,11 @@ def main():
 
 if __name__ == '__main__':
     try:
-        #Set logging mode
         logger.info('Welcome to the Sandbox Mod Installer')
-        logger.info('Please wait until this console says "Finished!"')
+        logger.info('Please follow the instructions on screen to continue!"')
         logger.info('======================================================')
 
-        #Show interface
+        #Show interface/Call main
         main()
 
         #Get game variant

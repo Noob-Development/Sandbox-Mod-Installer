@@ -108,6 +108,7 @@ class MainInterface ( wx.Frame ):
 
         sizer.Add(settingsWindow, 1, wx.ALL | wx.EXPAND, 2)
 
+
     def createInstallButton(self, sizer):
         installButtonSizer = wx.BoxSizer(wx.VERTICAL)
         installButton = wx.Button(self, wx.ID_ANY, _(u"Install!"), wx.DefaultPosition, wx.DefaultSize, 0)
