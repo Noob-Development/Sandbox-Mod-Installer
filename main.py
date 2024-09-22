@@ -67,9 +67,9 @@ def main():
 if __name__ == '__main__':
     try:
         #Set logging mode
-        log_output('Welcome to the Sandbox Mod Installer', 'info')
-        log_output('Please wait until this console says "Finished!"', 'info')
-        log_output('======================================================', 'info')
+        logger.info('Welcome to the Sandbox Mod Installer')
+        logger.info('Please wait until this console says "Finished!"')
+        logger.info('======================================================')
 
         #Show interface
         main()
@@ -126,8 +126,20 @@ if __name__ == '__main__':
         for patch_path in utils.patches_to_apply:
             patcher_call_list += [f'{dir_path}\\{MOD_FOLDER}\\Script Library\\{patch_path}']
         patcher_call = [f'{dir_path}\\{MOD_FOLDER}\\Patcher\\WGPatcher.exe', 'apply', full_ndf_path] + patcher_call_list
-        log_output(f'Patcher Call: {" ".join(patcher_call)}', 'info')
-        patcher = subprocess.run([f'{dir_path}\\{MOD_FOLDER}\\Patcher\\WGPatcher.exe', 'apply', full_ndf_path] + patcher_call_list, cwd=dir_path)
+        logger.info(f'Patcher Call: {" ".join(patcher_call)}')
+
+        # Run the patcher and log the output
+        process = subprocess.Popen(patcher_call, cwd=dir_path, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+
+        for stdout_line in iter(process.stdout.readline, ""):
+            logger.info(stdout_line.strip())
+        for stderr_line in iter(process.stderr.readline, ""):
+            logger.error(stderr_line.strip())
+
+        process.stdout.close()
+        process.stderr.close()
+        process.wait()
+
         move(join(dirname(full_ndf_path), 'ndf_win_patched.dat'), full_ndf_path)
 
         #Make installerConfig
