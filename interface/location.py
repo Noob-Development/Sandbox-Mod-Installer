@@ -1,12 +1,8 @@
 import os.path
-
 import wx
 import wx.xrc
-
 from interface.maininterface import MainInterface
-
 import utils
-
 import gettext
 _ = gettext.gettext
 
@@ -14,58 +10,54 @@ ID_DISCORD = 6000
 ID_GITHUB = 6001
 ID_BY_NOOB_DEVELOPMENT = 6002
 
-###########################################################################
-## Class DirSelector
-###########################################################################
+class DirSelector(wx.Frame):
+    def __init__(self, parent):
+        wx.Frame.__init__(self, parent, id=wx.ID_ANY, title=wx.EmptyString, pos=wx.DefaultPosition, size=wx.Size(393, 150), style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX))
+        self.SetSizeHints(wx.DefaultSize, wx.DefaultSize)
+        self.SetBackgroundColour(wx.Colour(34, 39, 46))
 
-class DirSelector ( wx.Frame ):
+        mainVerticalSizer = wx.BoxSizer(wx.VERTICAL)
 
-    def __init__( self, parent ):
-        wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = wx.EmptyString, pos = wx.DefaultPosition, size = wx.Size( 393,150 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+        self.createMenuBar()
+        self.createInstructionText(mainVerticalSizer)
+        self.createDirPicker(mainVerticalSizer)
+        self.createButton(mainVerticalSizer)
 
-        self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
-        self.SetBackgroundColour( wx.Colour( 34, 39, 46 ) )
-
-        bSizer2 = wx.BoxSizer( wx.VERTICAL )
-
-        self.m_staticText1 = wx.StaticText( self, wx.ID_ANY, _(u"Please select your Wargame Installation folder"), wx.DefaultPosition, wx.DefaultSize, 0 )
-        self.m_staticText1.Wrap( -1 )
-
-        self.m_staticText1.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_ACTIVEBORDER ) )
-
-        bSizer2.Add( self.m_staticText1, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
-
-        self.m_dirPicker1 = wx.DirPickerCtrl( self, wx.ID_ANY, wx.EmptyString, _(u"Select you wargame folder"), wx.DefaultPosition, wx.DefaultSize, wx.DIRP_DEFAULT_STYLE|wx.DIRP_DIR_MUST_EXIST|wx.DIRP_SMALL )
-        bSizer2.Add( self.m_dirPicker1, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
-
-        self.next = wx.Button( self, wx.ID_ANY, _(u"Next"), wx.DefaultPosition, wx.DefaultSize, 0 )
-        bSizer2.Add( self.next, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
-
-
-        self.SetSizer( bSizer2 )
+        self.SetSizer(mainVerticalSizer)
         self.Layout()
-        self.m_menubar2 = wx.MenuBar( 0 )
-        self.credit = wx.Menu()
-        self.discord = wx.MenuItem( self.credit, ID_DISCORD, _(u"Discord"), wx.EmptyString, wx.ITEM_NORMAL )
-        self.credit.Append( self.discord )
+        self.Centre(wx.BOTH)
 
-        self.github = wx.MenuItem( self.credit, ID_GITHUB, _(u"GitHub"), wx.EmptyString, wx.ITEM_NORMAL )
-        self.credit.Append( self.github )
+    def createMenuBar(self):
+        self.menuBar = wx.MenuBar(0)
+        self.creditMenu = wx.Menu()
 
-        self.credit.AppendSeparator()
+        self.addMenuItem(self.creditMenu, ID_DISCORD, _(u"Discord"))
+        self.addMenuItem(self.creditMenu, ID_GITHUB, _(u"GitHub"))
+        self.creditMenu.AppendSeparator()
+        self.addMenuItem(self.creditMenu, ID_BY_NOOB_DEVELOPMENT, _(u"By Noob Development"))
 
-        self.byNoobDevelopment = wx.MenuItem( self.credit, ID_BY_NOOB_DEVELOPMENT, _(u"By Noob Development"), wx.EmptyString, wx.ITEM_NORMAL )
-        self.credit.Append( self.byNoobDevelopment )
+        self.menuBar.Append(self.creditMenu, _(u"Credit"))
+        self.SetMenuBar(self.menuBar)
 
-        self.m_menubar2.Append( self.credit, _(u"Credit") )
+    def addMenuItem(self, menu, id, label):
+        menuItem = wx.MenuItem(menu, id, label, wx.EmptyString, wx.ITEM_NORMAL)
+        menu.Append(menuItem)
 
-        self.SetMenuBar( self.m_menubar2 )
+    def createInstructionText(self, sizer):
+        instructionText = wx.StaticText(self, wx.ID_ANY, _(u"Please select your Wargame Installation folder"), wx.DefaultPosition, wx.DefaultSize, 0)
+        instructionText.Wrap(-1)
+        instructionText.SetForegroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVEBORDER))
+        sizer.Add(instructionText, 0, wx.ALL | wx.ALIGN_CENTER_HORIZONTAL, 5)
 
+    def createDirPicker(self, sizer):
+        self.dirPicker = wx.DirPickerCtrl(self, wx.ID_ANY, wx.EmptyString, _(u"Select your Wargame folder"), wx.DefaultPosition, wx.DefaultSize, wx.DIRP_DEFAULT_STYLE | wx.DIRP_DIR_MUST_EXIST | wx.DIRP_SMALL)
+        sizer.Add(self.dirPicker, 0, wx.ALL | wx.ALIGN_CENTER_HORIZONTAL, 5)
 
-        self.Centre( wx.BOTH )
+    def createButton(self, sizer):
+        self.next = wx.Button(self, wx.ID_ANY, _(u"Next"), wx.DefaultPosition, wx.DefaultSize, 0)
+        sizer.Add(self.next, 0, wx.ALL | wx.ALIGN_CENTER_HORIZONTAL, 5)
 
-        # Connect Events
-        self.next.Bind( wx.EVT_BUTTON, self.openInstaller )
+        self.next.Bind(wx.EVT_BUTTON, self.openInstaller)
 
     def __del__( self ):
         pass
@@ -85,3 +77,5 @@ class DirSelector ( wx.Frame ):
                 wx.MessageBox(f"The selected location does not appear to be you Wargame Directory", "Wrong location", wx.ICON_ERROR)
 
 
+
+        utils.installLocation = self.dirPicker.GetPath()
