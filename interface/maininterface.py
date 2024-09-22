@@ -34,6 +34,7 @@ class MainInterface ( wx.Frame ):
 
         # Menu bar
         self.menuBar = wx.MenuBar(0)
+        self.settingsMenu = wx.Menu()
         self.creditMenu = wx.Menu()
 
         # Credit menu items
@@ -45,17 +46,18 @@ class MainInterface ( wx.Frame ):
 
         self.creditMenu.AppendSeparator()
 
-        self.creditByNoobDev = wx.MenuItem(self.creditMenu, ID_BY_NOOB_DEVELOPMENT, _(u"By Noob Development"), wx.EmptyString, wx.ITEM_NORMAL)
-        self.creditMenu.Append(self.creditByNoobDev)
+        self.addClickableMenuItem(self.settingsMenu, ID_CHECKBOX_ITEM, _(u"Modify whats currently loaded?"))
 
+        self.menuBar.Append(self.settingsMenu, _(u"Settings"))
         self.menuBar.Append(self.creditMenu, _(u"Credit"))
 
         self.SetMenuBar(self.menuBar)
 
         mainVerticalSizer = wx.BoxSizer(wx.VERTICAL)
 
-        self.m_staticText2 = wx.StaticText( self, wx.ID_ANY, _(u"Select the mods you want applyed to the game and then press \"install\"."), wx.DefaultPosition, wx.DefaultSize, 0 )
-        self.m_staticText2.Wrap( -1 )
+    def addClickableMenuItem(self, menu, id, label):
+        menuItem = wx.MenuItem(menu, id, label, kind=wx.ITEM_CHECK)
+        menu.Append(menuItem)
 
         self.m_staticText2.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_ACTIVEBORDER ) )
 
@@ -157,6 +159,8 @@ class MainInterface ( wx.Frame ):
 
 
     def startInstall( self, event ):
+        if self.GetMenuBar().FindItemById(6003).IsChecked():
+            utils.mod_from_backup = False
         self.Destroy()
 
 

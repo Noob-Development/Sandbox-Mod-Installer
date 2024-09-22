@@ -80,10 +80,10 @@ if __name__ == '__main__':
             logger.info('No patches applied')
             input("Press enter to continue...")
             exit()
-        #if mod_from_backup:
-        #    patches_log = open(join(MOD_FOLDER, PATCHES_LOG), 'w+', encoding='utf-8')
-        #else:
-        patches_log = open(join(f'{dir_path}\\{MOD_FOLDER}', PATCHES_LOG), 'w+', encoding='utf-8')
+        if utils.mod_from_backup:
+            patches_log = open(join(dir_path, MOD_FOLDER, PATCHES_LOG), 'w+', encoding='utf-8')
+        else:
+            patches_log = open(join(dir_path, MOD_FOLDER, PATCHES_LOG), 'w+', encoding='utf-8')
         for patch in utils.patches_to_apply:
             patches_log.write(patch)
             patches_log.write('\n')
@@ -97,10 +97,10 @@ if __name__ == '__main__':
         if not os.path.isfile(full_ndf_path+PRESANDBOX_SUFFIX):
             logger.warning('Backup does not exist, creating one!')
             copyfile(full_ndf_path, full_ndf_path+PRESANDBOX_SUFFIX)
-        #else:
-        #    if mod_from_backup:
-        #        os.remove(full_ndf_path)
-        #        copyfile(full_ndf_path + PRESANDBOX_SUFFIX, full_ndf_path)
+        else:
+            if utils.mod_from_backup:
+                os.remove(full_ndf_path)
+                copyfile(full_ndf_path + PRESANDBOX_SUFFIX, full_ndf_path)
 
         #Call patcher
         logger.info('')
