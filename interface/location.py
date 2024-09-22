@@ -59,23 +59,12 @@ class DirSelector(wx.Frame):
 
         self.next.Bind(wx.EVT_BUTTON, self.openInstaller)
 
-    def __del__( self ):
-        pass
-
-    def openInstaller( self, event):
-        utils.installLocation = self.m_dirPicker1.GetPath()
-        print(utils.installLocation)
-        if utils.installLocation:
-            file_path = os.path.join(utils.installLocation, "WarGame3.exe")
-            if os.path.isfile(file_path):
-                self.Destroy()
-                frame = MainInterface(None)
-                print(f"Valid location: {utils.installLocation}")
-                utils.get_version_and_download()
-                frame.Show()
-            else:
-                wx.MessageBox(f"The selected location does not appear to be you Wargame Directory", "Wrong location", wx.ICON_ERROR)
-
-
-
+    def openInstaller(self, event):
         utils.installLocation = self.dirPicker.GetPath()
+        if utils.installLocation and os.path.isfile(os.path.join(utils.installLocation, "WarGame3.exe")):
+            self.Destroy()
+            utils.get_version_and_download()
+            frame = MainInterface(None)
+            frame.Show()
+        else:
+            wx.MessageBox("The selected location does not appear to be your Wargame Directory", "Wrong location", wx.ICON_ERROR)

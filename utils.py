@@ -34,34 +34,30 @@ def get_zip_from_github():
     Downloads zip from latest release, extracts to temporary download folder, renames it, moves it, deletes temps
     """
     log_output('Downloading from GitHub, do not close...', 'info')
-    dir_path = dirname(os.path.realpath(__file__))
     download_url = json.loads(requests.get('https://api.github.com/repos/Noob-Development/Sandbox-Mod-Files/releases/latest', allow_redirects=True).content)['zipball_url']
-    urllib.request.urlretrieve(download_url, 'master.zip')
+    urllib.request.urlretrieve(download_url, os.path.join(installLocation, 'master.zip'))
     log_output('Extracting Zip', 'info')
-    with zipfile.ZipFile('master.zip', 'r') as zip_ref:
-        zip_ref.extractall('download')
+    with zipfile.ZipFile(join(installLocation, 'master.zip'), 'r') as zip_ref:
+        zip_ref.extractall(os.path.join(installLocation, 'download'))
     log_output('Moving folders', 'info')
-    download_name = list(os.listdir('download'))[0]
-    if os.path.isdir(MOD_FOLDER):
-        rmtree(join(dir_path, MOD_FOLDER))
-    os.rename(join(dir_path, 'download', download_name), MOD_FOLDER)
-    rmtree(join(dir_path, 'download'))
-    os.remove('master.zip')
+    download_name = list(os.listdir(installLocation + '\\' + 'download'))[0]
+    if os.path.isdir(join(installLocation, MOD_FOLDER)):
+        rmtree(join(installLocation, MOD_FOLDER))
+    os.rename(os.path.join(installLocation, 'download', download_name), os.path.join(installLocation, MOD_FOLDER))
+    rmtree(join(installLocation, 'download'))
+    os.remove(os.path.join(installLocation, 'master.zip'))
 
 def get_online_version():
     return json.loads(requests.get('https://api.github.com/repos/Noob-Development/Sandbox-Mod-Files/releases/latest', allow_redirects=True).content)['name']
 
 def get_current_version():
     with open(join(installLocation + '\\' + MOD_FOLDER, 'version.txt'), encoding='utf-8') as version_file:
-        print('test1')
         return version_file.read().strip()
 
 def load_patcher_json():
     with open(join(installLocation + '\\' + MOD_FOLDER, 'patcher_paths.json'), encoding='utf-8') as patcher_json:
-        print('test2')
         return json.load(patcher_json)
 
 def load_configuration():
     with open(join(installLocation + '\\' + MOD_FOLDER, 'install_locations.json'), encoding='utf-8') as install_json:
-        print('test3')
         return json.load(install_json)

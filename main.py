@@ -87,10 +87,9 @@ if __name__ == '__main__':
         for patch in utils.patches_to_apply:
             patches_log.write(patch)
             patches_log.write('\n')
-            patches_log.close()
+        patches_log.close()
 
         #Make original NDF_Win.dat file if needed
-        #log_output(f'{mod_from_backup=}', 'debug')
         pc_path = join('Data', 'WARGAME', 'PC')
         ndf_path = join(pc_path, install_config[game_variant]["NDF_Win.dat"], "NDF_Win.dat")
         full_ndf_path = join(dir_path, ndf_path)
