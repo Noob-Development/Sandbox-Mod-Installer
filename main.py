@@ -18,7 +18,7 @@ PATCHES_LOG = 'patch_list.txt'
 PRESANDBOX_SUFFIX = '_pre-sandbox'
 
 
-def write_config(config_file, new_file):
+def writeConfig(config_file, new_file):
     contents = config_file.read()
     splits = contents.split('%')
     for i in range(len(splits)):
@@ -53,13 +53,13 @@ if __name__ == '__main__':
         elif base_folder == 'WargameRedDragon':
             game_variant = 'Epic'
         else:
-            logger.error('Please place this in your Wargame Red Dragon folder')
+            logger.error('Something is wrong, no game variant found????')
             exit()
         logger.info(f'Game variant: {game_variant}')
 
         #Load installation paths
         logger.info('Getting install config')
-        install_config = utils.load_configuration()
+        install_config = utils.loadConfiguration()
 
         #Logging patches applied
         if utils.patches_to_apply == []:
@@ -115,14 +115,14 @@ if __name__ == '__main__':
         #Make installerConfig
         logger.debug('Making asset installer config file')
         config_replacements = {
-            'mod_version': utils.get_current_version(),
+            'mod_version': utils.getCurrentVersion(),
             'game_version': install_config[game_variant]["NDF_Win.dat"],
             'NDF_Win.dat-path': install_config[game_variant]["NDF_Win.dat"],
             'ZZ_Win.dat|interface_outgame-path': install_config[game_variant]["ZZ_Win.dat-interface_outgame"],
             'Data.dat-path': install_config[game_variant]["Data.dat"],
             'ZZ_4.dat-path': install_config[game_variant]["ZZ_4.dat"],}
         with open(join(dir_path, MOD_FOLDER, 'Installer', 'installerConfigTemplate.wmi'), encoding='utf-8') as config_file, open(join(dir_path, MOD_FOLDER, 'Installer', 'installerConfig.wmi'), 'w+', encoding='utf-8') as new_file:
-            write_config(config_file, new_file)
+            writeConfig(config_file, new_file)
             logger.debug('Writing to installer config file')
 
         #Run asset installer

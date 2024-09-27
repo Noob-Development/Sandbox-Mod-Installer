@@ -18,21 +18,21 @@ patches_to_apply = []
 mod_from_backup = True
 
 #Get version and download if needed
-def get_version_and_download():
+def getVersionAndDownload():
     #Get most current version
     if not os.path.isdir(join(installLocation, MOD_FOLDER)):
         logger.warning('Mod not downloaded yet')
-        get_zip_from_github()
+        getZipFromGithub()
     else:
-        if get_online_version() != get_current_version():
+        if getOnlineVersion() != getCurrentVersion():
             logger.warning('Local mod outdated, getting new version')
-            logger.warning(f'Online version: {get_online_version()}, Local version: {get_current_version()}')
-            get_zip_from_github()
+            logger.warning(f'Online version: {getOnlineVersion()}, Local version: {getCurrentVersion()}')
+            getZipFromGithub()
         else:
             logger.info('Local mod is most updated version')
 
 #Download zip from github
-def get_zip_from_github():
+def getZipFromGithub():
     """
     Downloads zip from latest release, extracts to temporary download folder, renames it, moves it, deletes temps
     """
@@ -51,20 +51,20 @@ def get_zip_from_github():
     os.remove(os.path.join(installLocation, 'master.zip'))
 
 #Get version from github
-def get_online_version():
+def getOnlineVersion():
     return json.loads(requests.get('https://api.github.com/repos/Noob-Development/Sandbox-Mod-Files/releases/latest', allow_redirects=True).content)['name']
 
 #Get version from local
-def get_current_version():
+def getCurrentVersion():
     with open(join(installLocation + '\\' + MOD_FOLDER, 'version.txt'), encoding='utf-8') as version_file:
         return version_file.read().strip()
 
 #Load patcher locations
-def load_patcher_json():
+def loadPatcherJson():
     with open(join(installLocation + '\\' + MOD_FOLDER, 'patcher_paths.json'), encoding='utf-8') as patcher_json:
         return json.load(patcher_json)
 
 #Load install locations
-def load_configuration():
+def loadConfiguration():
     with open(join(installLocation + '\\' + MOD_FOLDER, 'install_locations.json'), encoding='utf-8') as install_json:
         return json.load(install_json)

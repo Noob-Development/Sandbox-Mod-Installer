@@ -64,7 +64,7 @@ class DirSelector(wx.Frame):
         utils.installLocation = self.dirPicker.GetPath()
         if utils.installLocation and os.path.isfile(os.path.join(utils.installLocation, "WarGame3.exe")):
             self.Destroy()
-            utils.get_version_and_download()
+            utils.getVersionAndDownload()
             frame = MainInterface(None)
             frame.Show()
         else:
