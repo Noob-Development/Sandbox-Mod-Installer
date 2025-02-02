@@ -7,6 +7,7 @@ _ = gettext.gettext
 
 import utils
 from interface.InstallDone import InstallDonePopup
+from InstallMain import runInstall
 
 ID_DISCORD = 6000
 ID_GITHUB = 6001
@@ -124,6 +125,7 @@ class MainInterface ( wx.Frame ):
         utils.callAnalyticsAPI('install', 'sandbox')
         logger.debug('Called analytics API for install')
         self.Destroy()
+        runInstall()
         frame = InstallDonePopup(None)
         frame.Show()
 
