@@ -120,6 +120,8 @@ class MainInterface ( wx.Frame ):
     def startInstall( self, event ):
         if self.GetMenuBar().FindItemById(6003).IsChecked():
             utils.mod_from_backup = False
+        utils.callAnalyticsAPI('install', 'sandbox')
+        logger.debug('Called analytics API for install')
         self.Destroy()
 
 

@@ -12,6 +12,8 @@ logger = setupLogging()
 
 MOD_FOLDER = 'SandboxMod'
 
+API_URL = 'http://127.0.0.1:8000/'
+
 #Global veriables nice right?
 installLocation = None
 patches_to_apply = []
@@ -49,6 +51,8 @@ def getZipFromGithub():
     os.rename(os.path.join(installLocation, 'download', download_name), os.path.join(installLocation, MOD_FOLDER))
     rmtree(join(installLocation, 'download'))
     os.remove(os.path.join(installLocation, 'master.zip'))
+    callAnalyticsAPI('download', 'sandbox')
+    logger.debug('Called analytics API for download')
 
 #Get version from github
 def getOnlineVersion():
@@ -68,3 +72,9 @@ def loadPatcherJson():
 def loadConfiguration():
     with open(join(installLocation + '\\' + MOD_FOLDER, 'install_locations.json'), encoding='utf-8') as install_json:
         return json.load(install_json)
+
+#Send call to analytics API
+def callAnalyticsAPI(action, mod):
+    #TODO: Setup API call to analytics
+
+    pass
