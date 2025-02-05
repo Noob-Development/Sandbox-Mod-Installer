@@ -5,6 +5,7 @@ from shutil import copyfile, move, rmtree
 import requests
 import urllib.request
 import json
+import base64
 
 from loggingConfig import setupLogging
 
@@ -18,6 +19,7 @@ API_URL = 'http://127.0.0.1:8000/'
 installLocation = None
 patches_to_apply = []
 mod_from_backup = True
+invite_id = "No ID"
 
 #Get version and download if needed
 def getVersionAndDownload():
@@ -78,3 +80,39 @@ def callAnalyticsAPI(action, mod):
     #TODO: Setup API call to analytics
 
     pass
+
+#Encode patch list to base64 and send to API
+def encodeAndSendPatchList():
+    base64PatchList =  base64.b64encode(json.dumps(patches_to_apply).encode('utf-8')).decode('utf-8')
+    print("test")
+    try:
+        response = requests.post(API_URL + 'api/invite/', json={'base64PatchList': base64PatchList})
+        if response.status_code == 201:
+            global invite_id
+            logger.info('Sent patch list to API')
+            invite_id = str(response.json().get('id'))
+            print(invite_id)
+        else:
+            logger.error('Failed to send patch list to API')
+    except Exception as e:
+        logger.error('API call timed out')
+
+#Get and decode patch list from API
+def getAndDecodePatchList(invite_code):
+    try:
+        response = requests.get(API_URL + 'api/invite/' + invite_code)
+        if response.status_code == 200:
+            global patches_to_apply
+            global invite_id
+            patches_to_apply = json.loads(base64.b64decode(response.json().get('base64PatchList')).decode('utf-8'))
+            invite_id = invite_code
+            logger.info('Loaded options from invite code!')
+            return True
+        else:
+            logger.error('Failed to get patch list from API')
+            return False
+    except Exception as e:
+        logger.error('API call timed out')
+        return False
+
+

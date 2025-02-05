@@ -9,6 +9,9 @@ import utils
 from interface.InstallDone import InstallDonePopup
 from InstallMain import runInstall
 
+from loggingConfig import setupLogging
+logger = setupLogging()
+
 ID_DISCORD = 6000
 ID_GITHUB = 6001
 ID_BY_NOOB_DEVELOPMENT = 6002
@@ -23,7 +26,7 @@ class MainInterface ( wx.Frame ):
     def __init__( self, parent ):
         patcherJson = loadPatcherJson()
 
-        wx.Frame.__init__(self, parent, id=wx.ID_ANY, title=wx.EmptyString, pos=wx.DefaultPosition, size=wx.Size(900, 415), style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX))
+        wx.Frame.__init__(self, parent, id=wx.ID_ANY, title=wx.EmptyString, pos=wx.DefaultPosition, size=wx.Size(900, 445), style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX))
         self.SetSizeHints(wx.DefaultSize, wx.DefaultSize)
         self.SetBackgroundColour(wx.Colour(34, 39, 46))
 
@@ -41,6 +44,7 @@ class MainInterface ( wx.Frame ):
     def createMenuBar(self):
         self.menuBar = wx.MenuBar(0)
         self.settingsMenu = wx.Menu()
+        self.inviteSystem = wx.Menu()
         self.creditMenu = wx.Menu()
 
         self.addMenuItem(self.creditMenu, ID_DISCORD, _(u"Discord"))
@@ -51,8 +55,11 @@ class MainInterface ( wx.Frame ):
         self.addClickableMenuItem(self.settingsMenu, ID_CHECKBOX_ITEM, _(u"Modify whats currently loaded?"))
 
         self.menuBar.Append(self.settingsMenu, _(u"Settings"))
+        self.menuBar.Append(self.inviteSystem, _(u"Invite"))
         self.menuBar.Append(self.creditMenu, _(u"Credit"))
         self.SetMenuBar(self.menuBar)
+
+        self.Bind(wx.EVT_MENU_OPEN, self.onMenuOpen)
 
     def addMenuItem(self, menu, id, label):
         menuItem = wx.MenuItem(menu, id, label, wx.EmptyString, wx.ITEM_NORMAL)
@@ -63,7 +70,7 @@ class MainInterface ( wx.Frame ):
         menu.Append(menuItem)
 
     def createInstructionText(self, sizer):
-        instructionText = wx.StaticText(self, wx.ID_ANY, _(u"Select the mods you want applied to the game and then press \"install\"."), wx.DefaultPosition, wx.DefaultSize, 0)
+        instructionText = wx.StaticText(self, wx.ID_ANY, _(u"Select the mods you want applied to the game and then press \"install\".\nPlaying with friends? Press the invite option in the top menu and enter your invite code to get the same settings."), wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTER_HORIZONTAL)
         instructionText.Wrap(-1)
         instructionText.SetForegroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVEBORDER))
         sizer.Add(instructionText, 0, wx.ALL | wx.ALIGN_CENTER_HORIZONTAL, 5)
@@ -143,3 +150,17 @@ class MainInterface ( wx.Frame ):
         else:
             for name in names:
                 utils.patches_to_apply.remove(name)
+
+    def onMenuOpen(self, event, parent=None,):
+        if event.GetMenu()==self.inviteSystem:
+            invitePupup = wx.TextEntryDialog(parent, "Enter your invite code!", caption="Invite Code", style=wx.OK | wx.CANCEL)
+            invitePupup.ShowModal()
+            result = invitePupup.GetValue()
+            invitePupup.Destroy()
+            if utils.getAndDecodePatchList(result):
+                if self.GetMenuBar().FindItemById(6003).IsChecked():
+                    utils.mod_from_backup = False
+                    self.Close()
+                runInstall()
+                frame = InstallDonePopup(None)
+                frame.Show()
