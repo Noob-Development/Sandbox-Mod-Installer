@@ -61,7 +61,6 @@ def runInstall():
             patches_log.write('\n')
         patches_log.close()
 
-        utils.convertAndSendPatchList()
 
         #Make original NDF_Win.dat file if needed
         pc_path = join('Data', 'WARGAME', 'PC')

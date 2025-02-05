@@ -40,6 +40,7 @@ def getZipFromGithub():
     """
     Downloads zip from latest release, extracts to temporary download folder, renames it, moves it, deletes temps
     """
+    #TODO: Rework this to use our own download server for more stable downloads
     logger.info('Downloading from GitHub, do not close...')
     download_url = json.loads(requests.get('https://api.github.com/repos/Noob-Development/Sandbox-Mod-Files/releases/latest', allow_redirects=True).content)['zipball_url']
     urllib.request.urlretrieve(download_url, os.path.join(installLocation, 'master.zip'))

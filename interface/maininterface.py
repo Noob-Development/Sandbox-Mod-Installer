@@ -1,4 +1,5 @@
 from os.path import join
+import threading
 import wx
 import wx.xrc
 import json
@@ -127,15 +128,24 @@ class MainInterface ( wx.Frame ):
 
 
     def startInstall( self, event ):
+        event.GetEventObject().Disable()
         if self.GetMenuBar().FindItemById(6003).IsChecked():
             utils.mod_from_backup = False
         utils.callAnalyticsAPI('install', 'sandbox')
         logger.debug('Called analytics API for install')
-        self.Destroy()
+        utils.encodeAndSendPatchList()
+
+        install_thread = threading.Thread(target=self.InstallThread)
+        install_thread.start()
+
+    def InstallThread(self):
         runInstall()
+        wx.CallAfter(self.InstallDone)
+
+    def InstallDone(self):
+        self.Close()
         frame = InstallDonePopup(None)
         frame.Show()
-
 
 
     def optionCheck(self, event):
