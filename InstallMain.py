@@ -113,9 +113,8 @@ def runInstall():
             writeConfig(config_file, new_file, config_replacements)
 
         #Run asset installer
-        logger.info('Running asset installer (THIS HAS BEEN DISABLED FOR NOW)')
-        #TODO: THIS JUST HARD CRASHES THE INSTALLER WHEN RUN, THIS HAPPENED AFTER THE INSTALL PART WAS MOVED TO A SEPARATE FILE/FUNCTION
-        #asset_installer = subprocess.run('WargameModInstaller.exe', cwd=join(dir_path, MOD_FOLDER, 'Installer'), shell=True)
+        logger.info('Running asset installer!')
+        asset_installer = subprocess.run('WargameModInstaller.exe', cwd=join(dir_path, MOD_FOLDER, 'Installer'), shell=True)
 
         logger.info('Finished!')
 
