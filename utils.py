@@ -1,7 +1,7 @@
 import os
 import zipfile
 from os.path import join
-from shutil import copyfile, move, rmtree
+from shutil import rmtree
 import requests
 import urllib.request
 import json
@@ -85,14 +85,12 @@ def callAnalyticsAPI(action, mod):
 #Encode patch list to base64 and send to API
 def encodeAndSendPatchList():
     base64PatchList =  base64.b64encode(json.dumps(patches_to_apply).encode('utf-8')).decode('utf-8')
-    print("test")
     try:
         response = requests.post(API_URL + 'api/invite/', json={'base64PatchList': base64PatchList})
         if response.status_code == 201:
             global invite_id
             logger.info('Sent patch list to API')
             invite_id = str(response.json().get('id'))
-            print(invite_id)
         else:
             logger.error('Failed to send patch list to API')
     except Exception as e:
