@@ -13,7 +13,7 @@ logger = setupLogging()
 
 MOD_FOLDER = 'SandboxMod'
 
-API_URL = 'http://127.0.0.1:8000/'
+API_URL = 'https://noob.gr1ffen.dk/'
 
 #Global veriables nice right?
 installLocation = None
