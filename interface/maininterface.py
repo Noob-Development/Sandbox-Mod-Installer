@@ -18,6 +18,8 @@ ID_GITHUB = 6001
 ID_BY_NOOB_DEVELOPMENT = 6002
 ID_CHECKBOX_ITEM = 6003
 
+INSTALL_BUTTON = 6004
+
 def loadPatcherJson():
     with open(join(utils.installLocation + '\\SandboxMod', 'patcher_paths.json'), encoding='utf-8') as patcherJson:
         return json.load(patcherJson)
@@ -121,10 +123,10 @@ class MainInterface ( wx.Frame ):
 
     def createInstallButton(self, sizer):
         installButtonSizer = wx.BoxSizer(wx.VERTICAL)
-        installButton = wx.Button(self, wx.ID_ANY, _(u"Install!"), wx.DefaultPosition, wx.DefaultSize, 0)
-        installButtonSizer.Add(installButton, 0, wx.ALL, 5)
+        self.installButton = wx.Button(self, INSTALL_BUTTON, _(u"Install!"), wx.DefaultPosition, wx.DefaultSize, 0)
+        installButtonSizer.Add(self.installButton, 0, wx.ALL, 5)
         sizer.Add(installButtonSizer, 1, wx.ALIGN_CENTER_HORIZONTAL, 5)
-        installButton.Bind(wx.EVT_BUTTON, self.startInstall)
+        self.installButton.Bind(wx.EVT_BUTTON, self.startInstall)
 
 
     def startInstall( self, event ):
@@ -151,9 +153,6 @@ class MainInterface ( wx.Frame ):
     def optionCheck(self, event):
         event = event.GetEventObject()
 
-        print(f'{event.GetValue()}')
-        print(event.GetName().split(';'))
-
         names = event.GetName().split(';')
         if event.GetValue():
             utils.patches_to_apply += names
@@ -163,6 +162,7 @@ class MainInterface ( wx.Frame ):
 
     def onMenuOpen(self, event, parent=None,):
         if event.GetMenu()==self.inviteSystem:
+            self.installButton.Disable()
             invitePupup = wx.TextEntryDialog(parent, "Enter your invite code!", caption="Invite Code", style=wx.OK | wx.CANCEL)
             invitePupup.ShowModal()
             result = invitePupup.GetValue()
@@ -170,7 +170,6 @@ class MainInterface ( wx.Frame ):
             if utils.getAndDecodePatchList(result):
                 if self.GetMenuBar().FindItemById(6003).IsChecked():
                     utils.mod_from_backup = False
-                    self.Close()
-                runInstall()
-                frame = InstallDonePopup(None)
-                frame.Show()
+
+                install_thread = threading.Thread(target=self.InstallThread)
+                install_thread.start()
