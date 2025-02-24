@@ -8,17 +8,11 @@ _ = gettext.gettext
 
 import utils
 from interface.InstallDone import InstallDonePopup
+from interface.menuHandler import *
 from InstallMain import runInstall
 
 from loggingConfig import setupLogging
 logger = setupLogging()
-
-ID_DISCORD = 6000
-ID_GITHUB = 6001
-ID_BY_NOOB_DEVELOPMENT = 6002
-ID_CHECKBOX_ITEM = 6003
-
-INSTALL_BUTTON = 6004
 
 def loadPatcherJson():
     with open(join(utils.installLocation + '\\SandboxMod', 'patcher_paths.json'), encoding='utf-8') as patcherJson:
@@ -52,17 +46,19 @@ class MainInterface ( wx.Frame ):
 
         self.addMenuItem(self.creditMenu, ID_DISCORD, _(u"Discord"))
         self.addMenuItem(self.creditMenu, ID_GITHUB, _(u"GitHub"))
+        self.addMenuItem(self.creditMenu, ID_DONATE, _(u"Donate"))
         self.creditMenu.AppendSeparator()
         self.addMenuItem(self.creditMenu, ID_BY_NOOB_DEVELOPMENT, _(u"By Noob Development"))
 
-        self.addClickableMenuItem(self.settingsMenu, ID_CHECKBOX_ITEM, _(u"Modify whats currently loaded?"))
+        self.addClickableMenuItem(self.settingsMenu, wx.ID_ANY, _(u"Modify whats currently loaded?"))
 
         self.menuBar.Append(self.settingsMenu, _(u"Settings"))
         self.menuBar.Append(self.inviteSystem, _(u"Invite"))
-        self.menuBar.Append(self.creditMenu, _(u"Credit"))
+        self.menuBar.Append(self.creditMenu, _(u"Support us"))
         self.SetMenuBar(self.menuBar)
 
         self.Bind(wx.EVT_MENU_OPEN, self.onMenuOpen)
+        self.Bind(wx.EVT_MENU, onMenuItemClick)
 
     def addMenuItem(self, menu, id, label):
         menuItem = wx.MenuItem(menu, id, label, wx.EmptyString, wx.ITEM_NORMAL)
@@ -123,7 +119,7 @@ class MainInterface ( wx.Frame ):
 
     def createInstallButton(self, sizer):
         installButtonSizer = wx.BoxSizer(wx.VERTICAL)
-        self.installButton = wx.Button(self, INSTALL_BUTTON, _(u"Install!"), wx.DefaultPosition, wx.DefaultSize, 0)
+        self.installButton = wx.Button(self, wx.ID_ANY, _(u"Install!"), wx.DefaultPosition, wx.DefaultSize, 0)
         installButtonSizer.Add(self.installButton, 0, wx.ALL, 5)
         sizer.Add(installButtonSizer, 1, wx.ALIGN_CENTER_HORIZONTAL, 5)
         self.installButton.Bind(wx.EVT_BUTTON, self.startInstall)

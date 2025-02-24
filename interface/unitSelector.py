@@ -1,14 +1,11 @@
 import wx
 import wx.xrc
-
 import gettext
 _ = gettext.gettext
 
+from interface.InstallDone import InstallDonePopup
 
-ID_DISCORD = 6000
-ID_GITHUB = 6001
-ID_BY_NOOB_DEVELOPMENT = 6002
-ID_CHECKBOX_ITEM = 6003
+
 
 class UnitSelector (wx.Frame):
 

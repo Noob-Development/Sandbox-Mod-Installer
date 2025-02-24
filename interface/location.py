@@ -5,11 +5,8 @@ import gettext
 _ = gettext.gettext
 
 from interface.maininterface import MainInterface
+from interface.menuHandler import *
 import utils
-
-ID_DISCORD = 6000
-ID_GITHUB = 6001
-ID_BY_NOOB_DEVELOPMENT = 6002
 
 class DirSelector(wx.Frame):
     def __init__(self, parent):
@@ -34,11 +31,14 @@ class DirSelector(wx.Frame):
 
         self.addMenuItem(self.creditMenu, ID_DISCORD, _(u"Discord"))
         self.addMenuItem(self.creditMenu, ID_GITHUB, _(u"GitHub"))
+        self.addMenuItem(self.creditMenu, ID_DONATE, _(u"Donate"))
         self.creditMenu.AppendSeparator()
         self.addMenuItem(self.creditMenu, ID_BY_NOOB_DEVELOPMENT, _(u"By Noob Development"))
 
-        self.menuBar.Append(self.creditMenu, _(u"Credit"))
+        self.menuBar.Append(self.creditMenu, _(u"Support us"))
         self.SetMenuBar(self.menuBar)
+
+        self.Bind(wx.EVT_MENU, onMenuItemClick)
 
     def addMenuItem(self, menu, id, label):
         menuItem = wx.MenuItem(menu, id, label, wx.EmptyString, wx.ITEM_NORMAL)
