@@ -15,7 +15,7 @@ Epic Games: `C:\Program Files\Epic Games\WargameRedDragon`
 
 #### Using with other mods:
 1. Install mod of your choice
-2. Install the Sandbox Mod, select "Modify what is currently loaded" on the component selection screen
+2. On the install screen go to the settings menu and select the 'Modify what is currently loaded' and then install the mod as normal.
 3. To uninstall both mods, uninstall the Sandbox Mod first (instructions below), then uninstall the other mod following their provided instructions
 
 #### Issues:
@@ -23,8 +23,6 @@ Epic Games: `C:\Program Files\Epic Games\WargameRedDragon`
 
 #### Uninstalling:
 To uninstall the mod you go into steam or epic games and use there verify process.
-
-
 
 ## Development (For Modders)
 The information below is for people wanting to edit the installer for their own use.
@@ -36,7 +34,7 @@ pip install -r requirements.txt
 
 #### Build:
 ```powershell
-pyinstaller SandboxModInstall.py -F
+pyinstaller main.py -F --uac-admin -i SandboxLogo.ico
 ```
 
 #### How it works:
