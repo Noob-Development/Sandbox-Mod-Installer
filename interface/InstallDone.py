@@ -63,7 +63,7 @@ class InstallDonePopup(wx.Frame):
         sizer.Add(self.staticLine, 0, wx.EXPAND |wx.ALL, 5)
 
     def createInstructionText(self, sizer):
-        self.friendInstructionText = wx.StaticText(self, wx.ID_ANY, _(u"Playing with friends? Remember to have the same config else the game WILL desync!\nYou can get the same config by giving your frinds your \"invite code\", they just need to imput it into the installer and walla!\n"), wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.friendInstructionText = wx.StaticText(self, wx.ID_ANY, _(u"Playing with friends? Remember to have the same config else the game WILL desync!\nYou can get the same config by giving your friends your \"invite code\", they just need to input it into the installer and wallah!\n"), wx.DefaultPosition, wx.DefaultSize, 0 )
         self.friendInstructionText.Wrap(-1)
         self.friendInstructionText.SetForegroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVEBORDER))
         sizer.Add(self.friendInstructionText, 0, wx.ALIGN_CENTER|wx.ALL, 5)
