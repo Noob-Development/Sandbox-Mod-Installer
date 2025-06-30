@@ -4,18 +4,22 @@ import wx
 import wx.xrc
 import json
 import gettext
+
+import utils.apiCalls as apiCalls
+
+import utils.variables as var
+
 _ = gettext.gettext
 
-import utils
 from interface.InstallDone import InstallDonePopup
-from interface.menuHandler import *
+from interface.handlers.menuHandler import *
 from InstallMain import runInstall
 
 from loggingConfig import setupLogging
 logger = setupLogging()
 
 def loadPatcherJson():
-    with open(join(utils.installLocation + '\\SandboxMod', 'patcher_paths.json'), encoding='utf-8') as patcherJson:
+    with open(join(var.installLocation + '\\SandboxMod', 'patcher_paths.json'), encoding='utf-8') as patcherJson:
         return json.load(patcherJson)
 
 
@@ -128,10 +132,10 @@ class MainInterface ( wx.Frame ):
     def startInstall( self, event ):
         event.GetEventObject().Disable()
         if self.GetMenuBar().FindItemById(6003).IsChecked():
-            utils.mod_from_backup = False
-        utils.callAnalyticsAPI('install', 'sandbox')
+            var.mod_from_backup = False
+        apiCalls.callAnalyticsAPI('install', 'sandbox')
         logger.debug('Called analytics API for install')
-        utils.encodeAndSendPatchList()
+        apiCalls.encodeAndSendPatchList()
 
         install_thread = threading.Thread(target=self.InstallThread)
         install_thread.start()
@@ -151,10 +155,10 @@ class MainInterface ( wx.Frame ):
 
         names = event.GetName().split(';')
         if event.GetValue():
-            utils.patches_to_apply += names
+            var.patches_to_apply += names
         else:
             for name in names:
-                utils.patches_to_apply.remove(name)
+                var.patches_to_apply.remove(name)
 
     def onMenuOpen(self, event, parent=None,):
         if event.GetMenu()==self.inviteSystem:
@@ -163,9 +167,9 @@ class MainInterface ( wx.Frame ):
             invitePupup.ShowModal()
             result = invitePupup.GetValue()
             invitePupup.Destroy()
-            if utils.getAndDecodePatchList(result):
+            if apiCalls.getAndDecodePatchList(result):
                 if self.GetMenuBar().FindItemById(6003).IsChecked():
-                    utils.mod_from_backup = False
+                    var.mod_from_backup = False
 
                 install_thread = threading.Thread(target=self.InstallThread)
                 install_thread.start()

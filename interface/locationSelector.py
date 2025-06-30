@@ -2,11 +2,14 @@ import os.path
 import wx
 import wx.xrc
 import gettext
+
+import utils.modDownloader
+
 _ = gettext.gettext
 
-from interface.maininterface import MainInterface
-from interface.menuHandler import *
-import utils
+from interface.mainInterface import MainInterface
+from interface.handlers.menuHandler import *
+
 
 class DirSelector(wx.Frame):
     def __init__(self, parent):
@@ -61,10 +64,11 @@ class DirSelector(wx.Frame):
         self.next.Bind(wx.EVT_BUTTON, self.openInstaller)
 
     def openInstaller(self, event):
-        utils.installLocation = self.dirPicker.GetPath()
-        if utils.installLocation and os.path.isfile(os.path.join(utils.installLocation, "WarGame3.exe")):
+        import utils.variables  # Ensure you are updating the correct module variable
+        utils.variables.installLocation = self.dirPicker.GetPath()
+        if utils.variables.installLocation and os.path.isfile(os.path.join(utils.variables.installLocation, "WarGame3.exe")):
             self.Destroy()
-            utils.getVersionAndDownload()
+            utils.modDownloader.getVersionAndDownload()
             frame = MainInterface(None)
             frame.Show()
         else:

@@ -3,9 +3,9 @@ import wx.xrc
 import gettext
 _ = gettext.gettext
 
-from interface.menuHandler import *
+from interface.handlers.menuHandler import *
 
-import utils
+import utils.variables as var
 
 
 class InstallDonePopup(wx.Frame):
@@ -74,7 +74,7 @@ class InstallDonePopup(wx.Frame):
         self.inviteCode.SetForegroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_ACTIVEBORDER))
         sizer.Add(self.inviteCode, 0, wx.ALL, 5)
 
-        self.inviteCodeNumber = wx.StaticText(self, wx.ID_ANY, utils.invite_id, wx.DefaultPosition, wx.DefaultSize, 0)
+        self.inviteCodeNumber = wx.StaticText(self, wx.ID_ANY, var.invite_id, wx.DefaultPosition, wx.DefaultSize, 0)
         self.inviteCodeNumber.Wrap(-1)
         self.inviteCodeNumber.SetFont(wx.Font(9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "Arial"))
         sizer.Add(self.inviteCodeNumber, 0, wx.ALL, 5)

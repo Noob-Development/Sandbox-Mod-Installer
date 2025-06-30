@@ -1,4 +1,4 @@
-from interface.location import *
+from interface.locationSelector import *
 from loggingConfig import setupLogging
 
 logger = setupLogging()
